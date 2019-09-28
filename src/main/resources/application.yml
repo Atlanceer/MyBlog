@@ -1,6 +1,17 @@
 server:
   port: 8080
 
+logging:
+  file: log/myblog.log
+  #设置日志文件大小
+  file.max-size: 100MB
+  #保存三十天的日志
+  file.max-history: 30
+  level:
+    root: info
+    atlan.ceer: info
+    atlan.ceer.mapper: debug
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -37,3 +48,18 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
     # 合并多个DruidDataSource的监控数据
     useGlobalDataSourceStat: true
+
+  thymeleaf:
+    mode: HTML
+
+  #jpa:
+  #  hibernate:
+  #    ddl-auto: update
+  #  show-sql: true
+mybatis:
+  #配置mapper  xml所在位置
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    #开启驼峰命名匹配
+    map-underscore-to-camel-case: true
+
