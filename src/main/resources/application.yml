@@ -51,6 +51,12 @@ spring:
 
   thymeleaf:
     mode: HTML
+    #prefix: classpath:/templates/
+    #suffix: .html
+
+  #配置静态资源路径
+  #resources:
+    #static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/templates/
 
   #jpa:
   #  hibernate:
