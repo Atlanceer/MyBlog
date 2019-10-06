@@ -22,10 +22,10 @@ public class TestController {
         }
     }
 
-    @RequestMapping("/{id}/{name}")
+    /*@RequestMapping("/{id}/{name}")
     public String testAop(@PathVariable Integer id, @PathVariable String name){
         System.out.println("--------index--------"+id+name);
         return "index";
-    }
+    }*/
 
 }

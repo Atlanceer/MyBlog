@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>博客管理登录</title>
+  <link rel="stylesheet" href="../static/css/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/me.css">
+  <script src="../static/js/jquery-3.1.1.min.js"></script>
+  <script src="../static/js/semantic.min.js"></script>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+ <div class="m-container-small m-padded-tb-massive" style="max-width: 30em !important;">
+   <div class="ur container">
+     <div class="ui middle aligned center aligned grid">
+       <div class="column">
+         <h2 class="ui teal image header">
+           <div class="content">
+             管理后台登录
+           </div>
+         </h2>
+         <form class="ui large form" id="login">
+           <div class="ui  segment">
+             <div class="field">
+               <div class="ui left icon input">
+                 <i class="user icon"></i>
+                 <input type="text" name="username" placeholder="用户名">
+               </div>
+             </div>
+             <div class="field">
+               <div class="ui left icon input">
+                 <i class="lock icon"></i>
+                 <input type="password" name="password" placeholder="密码">
+               </div>
+             </div>
+             <button type="button" id="submit" class="ui fluid large teal button">登   录</button>
+           </div>
+
+           <!--错误信息-->
+           <div class="ui negative mini message hidden" id="negative">
+             <i class="close icon" id="close"></i>
+             <div class="header">
+               错误信息
+             </div>
+             <ul class="list" id="errorList">
+               <!--<li>你的密码需要包含至少一个大写和小写字母</li>
+               <li>你需要选择你所在的国家</li>-->
+             </ul>
+           </div>
+
+           <!--登录成功-->
+           <div class="ui blue message hidden" id="success">
+             <div class="header">
+               登录成功，欢迎您！
+             </div>
+           </div>
+
+           <div class="ui mini negative message hidden" id="loginFail">用户名或密码错误</div>
+
+         </form>
+
+       </div>
+     </div>
+   </div>
+ </div>
+
+<script>
+
+  //关闭错误信息
+  $("#close").click(function () {
+    $("#negative").addClass("hidden");
+  });
+
+  //input输入框焦点事件
+  $("input").focus(function () {
+    $("#errorList li").remove();
+    $("#negative").addClass("hidden");
+    $("#loginFail").addClass("hidden");
+  });
+
+  //表单提交
+  $("#submit").click(function () {
+    var formData = $("#login").serializeArray();
+    //判断表单是否填有值
+    if (formData[0].value==""||formData[1].value=="")  {
+      //移除错误信息，防止一直追加
+      $("#errorList li").remove();
+      if (formData[0].value=="") {
+        $("#errorList").append("<li>请输入用户名</li>");
+      }
+      if (formData[1].value=="")  {
+        $("#errorList").append("<li>请输入密码</li>");
+      }
+      $("#negative").removeClass("hidden");
+      return false;
+    }
+    $.ajax({
+      url:"../admin/login",
+      type:"POST",
+      dataType:"json",
+      data:formData,
+      success:function (data) {
+        if (data){
+          $("#success").removeClass("hidden");
+          //延迟加载
+          setTimeout(function () {
+            $(location).attr("href", "./index.html");
+          },1000);
+        } else {
+          $("#loginFail").removeClass("hidden");
+        }
+      },
+      error:function () {
+        
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
