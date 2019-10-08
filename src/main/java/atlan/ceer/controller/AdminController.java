@@ -12,11 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 @Slf4j
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/adminUser")
 public class AdminController {
     @Autowired
     private UserService userService;
@@ -46,8 +47,34 @@ public class AdminController {
             return false;
         }
     }
+
+    /**
+     * 退出登录
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public boolean logout(){
-        return false;
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        try {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null){
+                for(Cookie cookie: cookies){
+                    if (URLDecoder.decode(cookie.getName(), "utf-8").equals("username")){
+                        //清楚cookie，使过期
+                        cookie.setMaxAge(0);
+                        response.addCookie(cookie);
+                    }
+                }
+            }
+            //清除session
+            request.getSession().invalidate();
+            return true;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
 }
