@@ -20,8 +20,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         //判断是否重新登录
         boolean ifReLogin=false;
 
+        HttpSession session = request.getSession();
+        System.out.println(session.getAttribute("username"));
         //获取所有cookies
-        Cookie[] cookies = request.getCookies();
+        /*Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (URLDecoder.decode(cookie.getName(), "utf-8").equals("username")) { // 检查是否有用户信息
@@ -39,7 +41,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 response.setStatus(201);
                 return false;
             }
-        }
+        }*/
 
         return true;
     }

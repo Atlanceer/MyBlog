@@ -35,6 +35,7 @@ public class AdminController {
             Cookie nameCookie = null;
             try {
                 nameCookie = new Cookie("username", URLEncoder.encode(username,"UTF-8"));
+                log.info(nameCookie.getName()+"-->>>>>"+nameCookie.getValue());
                 //设置过期时间（秒为单位）一天：60*60*24
                 nameCookie.setMaxAge(60*60*24);
                 response.addCookie(nameCookie);
@@ -55,7 +56,7 @@ public class AdminController {
      * @return
      * @throws UnsupportedEncodingException
      */
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/logout", method = RequestMethod.GET)
     public boolean logout(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         try {
             Cookie[] cookies = request.getCookies();
@@ -75,6 +76,6 @@ public class AdminController {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
 
 }

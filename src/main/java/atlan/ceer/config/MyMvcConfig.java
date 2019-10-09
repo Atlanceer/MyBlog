@@ -13,6 +13,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/adminUser/**")
+                .addPathPatterns("/admin/index.html")
                 .excludePathPatterns("/adminUser/login")
                 .excludePathPatterns("/adminUser/logout");
     }

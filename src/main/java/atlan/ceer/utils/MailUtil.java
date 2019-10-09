@@ -69,7 +69,7 @@ public class MailUtil {
 
     public static void main(String[] args) {
         MailUtil mailUtil = new MailUtil();
-        if (mailUtil.sendCodeMail("atlanceer@163.com","1163")) {
+        if (mailUtil.sendCodeMail("tolankai@163.com","1163")) {
             System.out.println("success");
         }else {
             System.out.println("false");
