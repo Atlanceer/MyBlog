@@ -35,13 +35,13 @@ public class LogAspect {
         RequestLog requestLog=new RequestLog(url, ip, classMethod, args);
 
 
-//        log.info("--------doBefore--------");
+//        log.info("----------doBefore----------");
         log.info("Request : {}", requestLog);
     }
 
     @After("log()")
     public void doAfter(){
-        log.info("--------doAfter--------");
+        //log.info("----------doAfter----------");
     }
 
     @AfterReturning(returning = "result", pointcut = "log()")

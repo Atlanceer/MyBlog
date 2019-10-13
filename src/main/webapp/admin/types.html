@@ -49,11 +49,24 @@
   <!--中间内容-->
   <div  class="m-container-small m-padded-tb-big">
     <div class="ui container">
-      <div class="ui success message hidden">
-        <i class="close icon"></i>
-        <div class="header">提示：</div>
-        <p>恭喜，操作成功！</p>
+
+      <!--错误信息-->
+      <div class="ui negative mini message hidden" id="negative">
+        <i class="close icon" id="close"></i>
+        <div class="header">
+          提示
+        </div>
+        <ul class="list" id="errorList">
+        </ul>
       </div>
+
+      <!--操作成功-->
+      <div class="ui blue message hidden" id="success">
+        <div class="header">
+          操作成功！
+        </div>
+      </div>
+
       <table class="ui compact teal table">
         <thead>
           <tr>
@@ -62,24 +75,33 @@
             <th>操作</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
+        <tbody id="tableList">
+          <!--<tr>
             <td>1</td>
             <td>刻意练习清单</td>
             <td>
-              <a href="#" class="ui mini teal basic button">编辑</a>
-              <a href="#" class="ui mini red basic button">删除</a>
+              <a onclick="changeType()" class="ui mini teal basic button">编辑</a>
+              <a  class="ui mini red basic button">删除</a>
             </td>
-          </tr>
+          </tr>-->
         </tbody>
         <tfoot>
           <tr>
             <th colspan="6" >
               <div class="ui mini pagination menu">
-                <a class="  item">上一页</a>
-                <a class=" item">下一页</a>
+                <button class="ui mini button" id="prePage">上一页</button>
+                <div class="ui dropdown  icon button">
+                  <span class="mini">当前</span>
+                  <span class="text" id="currentPage">1</span>
+                  <div class="menu thePage" id="pageNum">
+                    <div class="item">1</div>
+                    <div class="item">2</div>
+                  </div>
+                </div>
+                <button class="ui mini button" id="nextPage">下一页</button>
               </div>
-              <a href="#"  class="ui mini right floated teal basic button">新增</a>
+
+              <a href="./types-input.html"  class="ui mini right floated teal basic button">新增</a>
             </th>
           </tr>
         </tfoot>
@@ -128,6 +150,74 @@
 
 
   <script>
+    //加载页面时候就请求数据进行渲染
+    $(document).ready(function () {
+      var currentPage=$("#currentPage").html()
+      loadPage(currentPage);
+
+    });
+
+    //加载指定页码的数据
+    function loadPage(pageNum){
+      $.ajax({
+        url:"../adminUser/typeList?currentPage="+pageNum,
+        type:"GET",
+        dataType:"json",
+        success:function (data) {
+          //加载成功
+          if (data.status){
+            //页面有数据时
+            if (typeList!="") {
+              var typePage=data.content;
+              var typeList = typePage.pageList;
+              var toTable="";
+              //填入list
+              for (var i=0; i<typeList.length; i++){
+                var theNameType="\'"+typeList[i].nameType+"\'";
+                toTable+= "<tr>"+
+                        "<td>"+typeList[i].id+"</td>"+
+                        "<td>"+typeList[i].nameType+"</td>"+
+                        "<td><a onclick=changeType("+typeList[i].id+","+theNameType+") class='ui mini teal basic button'>编辑</a>"+
+                        "<a onclick='deleteType("+typeList[i].id+")' class='ui mini red basic button'>删除</a></td>"+
+                        "</tr>";
+              }
+              $("#tableList").html(toTable);
+
+              //生成页码
+              var totalPage=typePage.totalPage;
+              var currentPage=typePage.currentPage;
+
+              $("#currentPage").html(currentPage);
+              var pageNum="";
+              for(var i=0;i<totalPage;i++){
+                pageNum+="<div class='item'>"+(i+1)+"</div>";
+              }
+              $("#pageNum").html(pageNum);
+              //alert(typeList.length+typeList[0].nameType);
+
+              //判断当前页码是否为第一页
+              if (currentPage==1){
+                $("#prePage").addClass("disabled");
+              } else {
+                $("#prePage").removeClass("disabled");
+              }
+              //判断当前是否为最后一页
+              if (!typePage.haveMore){
+                $("#nextPage").addClass("disabled");
+              } else {
+                $("#nextPage").removeClass("disabled");
+              }
+            }
+          } else {
+            $("#errorList li").remove();
+            $("#errorList").append("<li>加载失败</li>");
+            $("#negative").removeClass("hidden");
+            return false;
+          }
+        }
+      });
+    }
+
     $('.menu.toggle').click(function () {
       $('.m-item').toggleClass('m-mobile-hide');
     });
@@ -143,6 +233,37 @@
           .closest('.message')
           .transition('fade');
       });
+
+    function changeType(id,typeName) {
+      //使用url参数方式进行页面间的传值
+      $(location).attr("href", "./types-input.html"+"?id="+id+"&typeName="+typeName);
+    }
+    function deleteType(id) {
+
+    }
+
+    //关闭错误信息
+    $("#close").click(function () {
+      $("#negative").addClass("hidden");
+    });
+
+    //页面跳转
+    $(document).on('click', 'div.thePage .item', function () {
+      //alert($(this).html()+"被点击了");
+      var skipPage = $(this).html();
+      $("#currentPage").html(skipPage);
+      loadPage(skipPage);
+    });
+
+    $("#prePage").on('click',function () {
+      loadPage($("#currentPage").html()-1);
+    });
+
+    $("#nextPage").on('click',function () {
+      loadPage($("#currentPage").html()-1+2);
+    });
+
+
   </script>
 </body>
 </html>

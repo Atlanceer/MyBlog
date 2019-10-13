@@ -11,9 +11,8 @@
 </head>
 <body>
 
-<br>
-<br>
-<br>
+
+
  <div class="m-container-small m-padded-tb-massive" style="max-width: 30em !important;">
    <div class="ur container">
      <div class="ui middle aligned center aligned grid">
@@ -86,7 +85,7 @@
   $("#submit").click(function () {
     var formData = $("#login").serializeArray();
     //判断表单是否填有值
-    if (formData[0].value==""||formData[1].value=="")  {
+    if (formData[0].value==""||formData[1].value==="")  {
       //移除错误信息，防止一直追加
       $("#errorList li").remove();
       if (formData[0].value=="") {
@@ -108,8 +107,8 @@
           $("#success").removeClass("hidden");
           //延迟加载
           setTimeout(function () {
-            //$(location).attr("href", "./index.html");
-            window.location.href = "./index.html";
+            $(location).attr("href", "./index.html");
+            //window.location.href = "./index.html";
           },1000);
         } else {
           $("#loginFail").removeClass("hidden");

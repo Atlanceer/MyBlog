@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../static/css/me.css">
   <script src="../static/js/jquery-3.1.1.min.js"></script>
   <script src="../static/js/semantic.min.js"></script>
+  <script src="../static/js/jquery.params.js"></script>
 </head>
 <body>
 
@@ -49,32 +50,42 @@
   <!--中间内容-->
   <div  class="m-container-small m-padded-tb-big">
     <div class="ui container">
-      <form action="#" method="post"  class="ui form">
-        <input type="hidden" name="id" >
+      <form class="ui form" id="submitType">
+        <input style="display:none" name="typeId" value="" id="typeId">
         <div class=" field">
           <div class="ui left labeled input">
             <label class="ui teal basic label">名称</label>
-            <input type="text" name="name" placeholder="分类名称" >
+            <input type="text" name="typeName" id="typeName" placeholder="分类名称" >
           </div>
         </div>
 
-        <div class="ui error message"></div>
+        <!--错误信息-->
+        <div class="ui negative mini message hidden" id="negative">
+          <i class="close icon" id="close"></i>
+          <div class="header">
+            提示
+          </div>
+          <ul class="list" id="errorList">
+          </ul>
+        </div>
+
+        <!--添加成功-->
+        <div class="ui blue message hidden" id="success">
+          <div class="header">
+            添加成功！
+          </div>
+        </div>
+
 
         <div class="ui right aligned container">
           <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
-          <button class="ui teal submit button">提交</button>
+          <button type="button" class="ui teal button" id="submit">提交</button>
         </div>
 
       </form>
     </div>
   </div>
 
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
   <br>
   <br>
   <!--底部footer-->
@@ -117,6 +128,16 @@
 
   <script>
 
+    //加载页面时候就请求数据进行渲染
+    $(document).ready(function () {
+      var id=$.query.get("id");
+      if (id!=""){
+        //alert(id);
+        $("#typeName").val($.query.get("typeName"));
+        $("#typeId").val(id);
+      }
+    });
+
     $('.menu.toggle').click(function () {
       $('.m-item').toggleClass('m-mobile-hide');
     });
@@ -135,6 +156,51 @@
           }]
         }
       }
+    });
+
+    $("#submit").click(function () {
+      var url="../adminUser/addType";
+      var formData = $("#submitType").serializeArray();
+      //alert(formData.length)
+      //alert(formData[0].value);
+      if (formData[0].value!=""){
+        url="../adminUser/changeType";
+      }
+      if (formData[1].value=="") {
+        $("#errorList li").remove();
+        $("#errorList").append("<li>请输入分类名称</li>");
+        $("#negative").removeClass("hidden");
+        return false;
+      }
+      $.ajax({
+        url:url,
+        type: "POST",
+        dataType:"json",
+        data:formData,
+        success:function (data) {
+          if (data){
+            $("#success").removeClass("hidden");
+            //延迟加载
+            setTimeout(function () {
+              $("#success").addClass("hidden");
+            },3000);
+          } else {
+            $("#errorList li").remove();
+            $("#errorList").append("<li>出错</li>");
+          }
+        }
+      });
+    });
+
+    //关闭错误信息
+    $("#close").click(function () {
+      $("#negative").addClass("hidden");
+    });
+
+    //input输入框焦点事件
+    $("input").focus(function () {
+      $("#errorList li").remove();
+      $("#negative").addClass("hidden");
     });
 
   </script>
