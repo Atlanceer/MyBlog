@@ -17,9 +17,9 @@
     <div class="ui container">
       <div class="ui inverted secondary stackable menu">
         <h2 class="ui teal header item">管理后台</h2>
-        <a href="./blogs.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
+        <a href="blogs.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
         <a href="#" class="active m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
-        <a href="./tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+        <a href="tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
         <div class="right m-item m-mobile-hide menu">
           <div class="ui dropdown  item">
             <div class="text">
@@ -42,7 +42,7 @@
     <div class="ui container">
       <div class="right menu">
         <a href="#" class="teal active item">新增</a>
-        <a href="./types.html" class="item">列表</a>
+        <a href="types.html" class="item">列表</a>
       </div>
     </div>
   </div>
@@ -159,12 +159,12 @@
     });
 
     $("#submit").click(function () {
-      var url="../adminUser/addType";
+      var url="../adminUser/type/add";
       var formData = $("#submitType").serializeArray();
       //alert(formData.length)
       //alert(formData[0].value);
       if (formData[0].value!=""){
-        url="../adminUser/changeType";
+        url="../adminUser/type/change";
       }
       if (formData[1].value=="") {
         $("#errorList li").remove();
@@ -179,7 +179,10 @@
         data:formData,
         success:function (data) {
           if (data){
+            //显示成功信息
             $("#success").removeClass("hidden");
+            //将输入框清空，防止重复提交
+            $("#typeName").val("");
             //延迟加载
             setTimeout(function () {
               $("#success").addClass("hidden");

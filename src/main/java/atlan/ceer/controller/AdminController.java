@@ -108,7 +108,7 @@ public class AdminController {
      * @param typeName
      * @return
      */
-    @RequestMapping(value = "/addType", method = RequestMethod.POST)
+    @RequestMapping(value = "/type/add", method = RequestMethod.POST)
     public boolean addType(String typeName){
         boolean judge = blogService.addType(typeName);
         return judge;
@@ -118,12 +118,38 @@ public class AdminController {
      * 获取博客分类列表
      * @return
      */
-    @RequestMapping(value = "/typeList", method = RequestMethod.GET)
+    @RequestMapping(value = "/type/list", method = RequestMethod.GET)
     public MyResult getTypeList(String currentPage){
         Map<String, Object> map = new HashMap<>();
         map.put("currentPage",currentPage);
         QueryPage queryPage = blogService.getTypeList(map);
         return new MyResult(queryPage,true,"查询成功",200);
+    }
+
+    /**
+     * 删除分类
+     */
+    @RequestMapping(value = "/type/delete", method = RequestMethod.POST)
+    public MyResult deleteType(String id){
+        int typeId = Integer.valueOf(id);
+        if (blogService.deleteType(typeId)) {
+            return new MyResult(true,"删除成功",200);
+        }else {
+            return new MyResult(false,"删除失败",201);
+        }
+    }
+
+    /**
+     * 修改分类
+     */
+    @RequestMapping(value = "/type/change", method = RequestMethod.POST)
+    public MyResult changeType(String typeId, String typeName){
+        int id = Integer.valueOf(typeId);
+        if (blogService.changeType(id, typeName)) {
+            return new MyResult(true,"修改成功",200);
+        }else {
+            return new MyResult(false,"修改失败",201);
+        }
     }
 
 }

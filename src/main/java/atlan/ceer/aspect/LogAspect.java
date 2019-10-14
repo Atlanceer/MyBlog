@@ -18,8 +18,8 @@ import java.util.Arrays;
 @Component
 public class LogAspect {
 
-    //配置切面
-    @Pointcut("execution(* atlan.ceer.controller.*.*(..))")
+    //配置切面记录用户登录之后的操作
+    @Pointcut("execution(* atlan.ceer.controller.AdminController.*(..))")
     public void log(){
 
     }

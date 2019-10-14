@@ -77,8 +77,29 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean changeType(Integer typeId) {
+    public boolean changeType(Integer typeId, String typeName) {
+        //更新的字段
+        TypeBlog typeBlog = new TypeBlog();
+        typeBlog.setNameType(typeName);
+        //时间字段
+
+
+        TypeBlogExample typeBlogExample = new TypeBlogExample();
+        TypeBlogExample.Criteria criteria = typeBlogExample.createCriteria();
+        criteria.andIdEqualTo(typeId);
+        typeBlogMapper.updateByExampleSelective(typeBlog, typeBlogExample);
         return false;
+    }
+
+    @Override
+    public boolean deleteType(Integer typeId) {
+        try {
+            typeBlogMapper.deleteByPrimaryKey(typeId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -92,7 +113,12 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean changeTag(Integer tagId) {
+    public boolean changeTag(Integer tagId, String tagName) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteTag(Integer tagId) {
         return false;
     }
 }

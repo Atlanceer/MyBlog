@@ -16,9 +16,9 @@
     <div class="ui container">
       <div class="ui inverted secondary stackable menu">
         <h2 class="ui teal header item">管理后台</h2>
-        <a href="./blogs.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
+        <a href="blogs.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
         <a href="#" class="active m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
-        <a href="./tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+        <a href="tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
         <div class="right m-item m-mobile-hide menu">
           <div class="ui dropdown  item">
             <div class="text">
@@ -40,7 +40,7 @@
   <div class="ui attached pointing menu">
     <div class="ui container">
       <div class="right menu">
-        <a href="./types-input.html" class="item">新增</a>
+        <a href="types-input.html" class="item">新增</a>
         <a href="#" class="teal active item">列表</a>
       </div>
     </div>
@@ -75,6 +75,7 @@
             <th>操作</th>
           </tr>
         </thead>
+
         <tbody id="tableList">
           <!--<tr>
             <td>1</td>
@@ -85,6 +86,7 @@
             </td>
           </tr>-->
         </tbody>
+
         <tfoot>
           <tr>
             <th colspan="6" >
@@ -101,11 +103,12 @@
                 <button class="ui mini button" id="nextPage">下一页</button>
               </div>
 
-              <a href="./types-input.html"  class="ui mini right floated teal basic button">新增</a>
+              <a href="types-input.html" class="ui  right floated  button">新增</a>
             </th>
           </tr>
         </tfoot>
       </table>
+
     </div>
   </div>
 
@@ -152,7 +155,7 @@
   <script>
     //加载页面时候就请求数据进行渲染
     $(document).ready(function () {
-      var currentPage=$("#currentPage").html()
+      var currentPage=$("#currentPage").html();
       loadPage(currentPage);
 
     });
@@ -160,7 +163,7 @@
     //加载指定页码的数据
     function loadPage(pageNum){
       $.ajax({
-        url:"../adminUser/typeList?currentPage="+pageNum,
+        url:"../adminUser/type/list?currentPage="+pageNum,
         type:"GET",
         dataType:"json",
         success:function (data) {
@@ -239,7 +242,25 @@
       $(location).attr("href", "./types-input.html"+"?id="+id+"&typeName="+typeName);
     }
     function deleteType(id) {
+      if(confirm("是否删除该分类:"+id)) {
+        $.ajax({
+          url: "../adminUser/type/delete?id=" + id,
+          dataType: "json",
+          type: "POST",
+          success: function (data) {
+            if (data.status) {
+              $("#success").removeClass("hidden");
+              setTimeout(function () {
+                $("#success").addClass("hidden");
+                var currentPage=$("#currentPage").html();
+                loadPage(currentPage);
+              },1000);
+            }
+          }
+        });
+      }else {
 
+      }
     }
 
     //关闭错误信息
