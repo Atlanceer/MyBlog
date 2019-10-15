@@ -138,26 +138,6 @@
       }
     });
 
-    $('.menu.toggle').click(function () {
-      $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('.ui.dropdown').dropdown({
-      on : 'hover'
-    });
-
-    $('.ui.form').form({
-      fields : {
-        title : {
-          identifier: 'name',
-          rules: [{
-            type : 'empty',
-            prompt: '请输入分类名称'
-          }]
-        }
-      }
-    });
-
     $("#submit").click(function () {
       var url="../adminUser/type/add";
       var formData = $("#submitType").serializeArray();
@@ -178,7 +158,7 @@
         dataType:"json",
         data:formData,
         success:function (data) {
-          if (data){
+          if (data.status){
             //显示成功信息
             $("#success").removeClass("hidden");
             //将输入框清空，防止重复提交
@@ -186,7 +166,8 @@
             //延迟加载
             setTimeout(function () {
               $("#success").addClass("hidden");
-            },3000);
+              $(location).attr("href","types.html")
+            },1000);
           } else {
             $("#errorList li").remove();
             $("#errorList").append("<li>出错</li>");
@@ -206,6 +187,14 @@
       $("#negative").addClass("hidden");
     });
 
+
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+      on : 'hover'
+    });
   </script>
 </body>
 </html>

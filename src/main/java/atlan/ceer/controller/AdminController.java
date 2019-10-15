@@ -109,9 +109,13 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/type/add", method = RequestMethod.POST)
-    public boolean addType(String typeName){
+    public MyResult addType(String typeName){
         boolean judge = blogService.addType(typeName);
-        return judge;
+        if (judge){
+            return new MyResult(true,"添加成功",200);
+        }else {
+            return new MyResult(false,"添加失败",201);
+        }
     }
 
     /**
@@ -122,7 +126,8 @@ public class AdminController {
     public MyResult getTypeList(String currentPage){
         Map<String, Object> map = new HashMap<>();
         map.put("currentPage",currentPage);
-        QueryPage queryPage = blogService.getTypeList(map);
+        map.put("queryType","type");
+        QueryPage queryPage = blogService.getList(map);
         return new MyResult(queryPage,true,"查询成功",200);
     }
 
@@ -146,6 +151,60 @@ public class AdminController {
     public MyResult changeType(String typeId, String typeName){
         int id = Integer.valueOf(typeId);
         if (blogService.changeType(id, typeName)) {
+            return new MyResult(true,"修改成功",200);
+        }else {
+            return new MyResult(false,"修改失败",201);
+        }
+    }
+
+    /**
+     * 添加博客标签
+     * @param typeName
+     * @return
+     */
+    @RequestMapping(value = "/tag/add", method = RequestMethod.POST)
+    public MyResult addTag(String tagName){
+        boolean judge = blogService.addTag(tagName);
+        if (judge){
+            return new MyResult(true,"添加成功",200);
+        }else {
+            return new MyResult(false,"添加失败",201);
+        }
+    }
+
+    /**
+     * 获取博客标签列表
+     * @return
+     */
+    @RequestMapping(value = "/tag/list", method = RequestMethod.GET)
+    public MyResult getTagList(String currentPage){
+        Map<String, Object> map = new HashMap<>();
+        map.put("currentPage",currentPage);
+        map.put("queryType","tag");
+        QueryPage queryPage = blogService.getList(map);
+        return new MyResult(queryPage,true,"查询成功",200);
+    }
+
+    /**
+     * 删除标签
+     */
+    @RequestMapping(value = "/tag/delete", method = RequestMethod.POST)
+    public MyResult deleteTag(String id){
+        int tagId = Integer.valueOf(id);
+        if (blogService.deleteTag(tagId)) {
+            return new MyResult(true,"删除成功",200);
+        }else {
+            return new MyResult(false,"删除失败",201);
+        }
+    }
+
+    /**
+     * 修改标签
+     */
+    @RequestMapping(value = "/tag/change", method = RequestMethod.POST)
+    public MyResult changeTag(String tagId, String tagName){
+        int id = Integer.valueOf(tagId);
+        if (blogService.changeTag(id, tagName)) {
             return new MyResult(true,"修改成功",200);
         }else {
             return new MyResult(false,"修改失败",201);

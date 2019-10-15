@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../static/css/me.css">
     <script src="../static/js/jquery-3.1.1.min.js"></script>
     <script src="../static/js/semantic.min.js"></script>
+    <script src="../static/js/jquery.params.js"></script>
 </head>
 <body>
 
@@ -49,26 +50,35 @@
     <!--中间内容-->
     <div  class="m-container-small m-padded-tb-big">
         <div class="ui container">
-            <form class="ui form">
-                <input type="hidden" name="id" >
+            <form class="ui form" id="submitTag">
+                <input style="display:none" name="tagId" value="" id="tagId">
                 <div class=" field">
                     <div class="ui left labeled input">
                         <label class="ui teal basic label">名称</label>
-                        <input type="text" name="name" placeholder="分类名称" >
+                        <input type="text" name="tagName" id="tagName" placeholder="标签名称" >
                     </div>
                 </div>
 
-                <div class="ui error message"></div>
-                <!--/*/
-                <div class="ui negative message" th:if="${#fields.hasErrors('name')}"  >
-                  <i class="close icon"></i>
-                  <div class="header">验证失败</div>
-                  <p th:errors="*{name}">提交信息不符合规则</p>
+                <!--错误信息-->
+                <div class="ui negative mini message hidden" id="negative">
+                    <i class="close icon" id="close"></i>
+                    <div class="header">
+                        提示
+                    </div>
+                    <ul class="list" id="errorList">
+                    </ul>
                 </div>
-                 /*/-->
+
+                <!--添加成功-->
+                <div class="ui blue message hidden" id="success">
+                    <div class="header">
+                        添加成功！
+                    </div>
+                </div>
+
                 <div class="ui right aligned container">
                     <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
-                    <button type="button" class="ui teal button">提交</button>
+                    <button type="button" class="ui teal button" id="submit">提交</button>
                 </div>
 
             </form>
@@ -122,6 +132,64 @@
 
 
     <script>
+        //加载页面时候就请求数据进行渲染
+        $(document).ready(function () {
+            var id=$.query.get("id");
+            if (id!=""){
+                //alert(id);
+                $("#tagName").val($.query.get("tagName"));
+                $("#tagId").val(id);
+            }
+        });
+
+        $("#submit").click(function () {
+            var url="../adminUser/tag/add";
+            var formData = $("#submitTag").serializeArray();
+            //alert(formData.length)
+            //alert(formData[0].value);
+            if (formData[0].value!=""){
+                url="../adminUser/tag/change";
+            }
+            if (formData[1].value=="") {
+                $("#errorList li").remove();
+                $("#errorList").append("<li>请输入分类名称</li>");
+                $("#negative").removeClass("hidden");
+                return false;
+            }
+            $.ajax({
+                url:url,
+                type: "POST",
+                dataType:"json",
+                data:formData,
+                success:function (data) {
+                    if (data.status){
+                        //显示成功信息
+                        $("#success").removeClass("hidden");
+                        //将输入框清空，防止重复提交
+                        $("#tagName").val("");
+                        //延迟加载
+                        setTimeout(function () {
+                            $("#success").addClass("hidden");
+                            $(location).attr("href","tags.html");
+                        },1000);
+                    } else {
+                        $("#errorList li").remove();
+                        $("#errorList").append("<li>出错</li>");
+                    }
+                }
+            });
+        });
+
+        //关闭错误信息
+        $("#close").click(function () {
+            $("#negative").addClass("hidden");
+        });
+
+        //input输入框焦点事件
+        $("input").focus(function () {
+            $("#errorList li").remove();
+            $("#negative").addClass("hidden");
+        });
 
         $('.menu.toggle').click(function () {
             $('.m-item').toggleClass('m-mobile-hide');
@@ -130,18 +198,6 @@
         $('.ui.dropdown').dropdown({
             on : 'hover'
         });
-
-        /*$('.ui.form').form({
-            fields : {
-                title : {
-                    identifier: 'name',
-                    rules: [{
-                        type : 'empty',
-                        prompt: '请输入标签名称'
-                    }]
-                }
-            }
-        });*/
 
     </script>
 </body>

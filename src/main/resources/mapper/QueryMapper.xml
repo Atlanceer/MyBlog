@@ -5,4 +5,8 @@
         select * from type_blog
         limit #{beginNum},10;
     </select>
+    <select id="getTagList" parameterType="HashMap" resultType="atlan.ceer.pojo.TagBlog">
+        select * from tag_blog
+        limit #{beginNum},10;
+    </select>
 </mapper>

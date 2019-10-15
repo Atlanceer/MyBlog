@@ -1,12 +1,11 @@
 package atlan.ceer.service.impl;
 
+import atlan.ceer.mapper.BlogMapper;
 import atlan.ceer.mapper.QueryMapper;
 import atlan.ceer.mapper.TagBlogMapper;
 import atlan.ceer.mapper.TypeBlogMapper;
 import atlan.ceer.model.QueryPage;
-import atlan.ceer.pojo.TagBlog;
-import atlan.ceer.pojo.TypeBlog;
-import atlan.ceer.pojo.TypeBlogExample;
+import atlan.ceer.pojo.*;
 import atlan.ceer.service.BlogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +24,36 @@ public class BlogServiceImpl implements BlogService {
     private TagBlogMapper tagBlogMapper;
     @Autowired
     private QueryMapper queryMapper;
+    @Autowired
+    private BlogMapper blogMapper;
 
     @Override
-    public QueryPage<TypeBlog> getTypeList(Map map) {
+    public QueryPage getList(Map<String, Object> map) {
         int currentPage = Integer.valueOf((String)map.get("currentPage"));
         if (currentPage==1){
             map.put("beginNum",0);
         }else {
             map.put("beginNum",(currentPage-1)*10);
         }
-        TypeBlogExample typeBlogExample = new TypeBlogExample();
-        int totalCount = (int) typeBlogMapper.countByExample(typeBlogExample);
+        int totalCount = 0;
+
+        List queryList = null;
+        //判断查询的类型
+        if (((String)map.get("queryType")).equals("type")){
+            TypeBlogExample typeBlogExample = new TypeBlogExample();
+            totalCount = (int) typeBlogMapper.countByExample(typeBlogExample);
+            //查询列表
+            queryList = queryMapper.getTypeList(map);
+        }else if (((String)map.get("queryType")).equals("tag")){
+            TagBlogExample tagBlogExample = new TagBlogExample();
+            totalCount = (int) tagBlogMapper.countByExample(tagBlogExample);
+            //查询列表
+            queryList = queryMapper.getTagList(map);
+        }else {
+            BlogExample blogExample = new BlogExample();
+            totalCount = (int) blogMapper.countByExample(blogExample);
+        }
+
         int totalPage;
         if (totalCount<=10){
             totalPage = 1;
@@ -58,8 +76,8 @@ public class BlogServiceImpl implements BlogService {
             queryPage.setHaveMore(true);
         }
 
-        List<TypeBlog> typeBlogs = queryMapper.getTypeList(map);
-        queryPage.setPageList(typeBlogs);
+        //List<TypeBlog> typeBlogs = queryMapper.getTypeList(map);
+        queryPage.setPageList(queryList);
         return queryPage;
     }
 
@@ -88,7 +106,7 @@ public class BlogServiceImpl implements BlogService {
         TypeBlogExample.Criteria criteria = typeBlogExample.createCriteria();
         criteria.andIdEqualTo(typeId);
         typeBlogMapper.updateByExampleSelective(typeBlog, typeBlogExample);
-        return false;
+        return true;
     }
 
     @Override
@@ -102,23 +120,43 @@ public class BlogServiceImpl implements BlogService {
         }
     }
 
-    @Override
-    public QueryPage<TagBlog> getTagList(Map map) {
-        return null;
-    }
 
     @Override
     public boolean addTag(String tagName) {
-        return false;
+        try {
+            TagBlog tagBlog = new TagBlog();
+            tagBlog.setNameTag(tagName);
+            tagBlogMapper.insert(tagBlog);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean changeTag(Integer tagId, String tagName) {
-        return false;
+        //更新的字段
+        TagBlog tagBlog = new TagBlog();
+        tagBlog.setNameTag(tagName);
+        //时间字段
+
+
+        TagBlogExample tagBlogExample = new TagBlogExample();
+        TagBlogExample.Criteria criteria = tagBlogExample.createCriteria();
+        criteria.andIdEqualTo(tagId);
+        tagBlogMapper.updateByExampleSelective(tagBlog, tagBlogExample);
+        return true;
     }
 
     @Override
     public boolean deleteTag(Integer tagId) {
-        return false;
+        try {
+            tagBlogMapper.deleteByPrimaryKey(tagId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

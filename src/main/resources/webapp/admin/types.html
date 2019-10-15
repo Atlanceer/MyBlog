@@ -97,7 +97,6 @@
                   <span class="text" id="currentPage">1</span>
                   <div class="menu thePage" id="pageNum">
                     <div class="item">1</div>
-                    <div class="item">2</div>
                   </div>
                 </div>
                 <button class="ui mini button" id="nextPage">下一页</button>
@@ -169,10 +168,10 @@
         success:function (data) {
           //加载成功
           if (data.status){
+            var typePage=data.content;
+            var typeList = typePage.pageList;
             //页面有数据时
             if (typeList!="") {
-              var typePage=data.content;
-              var typeList = typePage.pageList;
               var toTable="";
               //填入list
               for (var i=0; i<typeList.length; i++){
@@ -210,6 +209,17 @@
               } else {
                 $("#nextPage").removeClass("disabled");
               }
+            }else {
+              $("#errorList li").remove();
+              $("#errorList").append("<li>没有数据</li>");
+              $("#negative").removeClass("hidden");
+              $("#tableList").html("");
+              $("#prePage").addClass("disabled");
+              $("#nextPage").addClass("disabled");
+              setTimeout(function () {
+                $("#negative").addClass("hidden");
+              },1000);
+              return false;
             }
           } else {
             $("#errorList li").remove();
@@ -221,13 +231,7 @@
       });
     }
 
-    $('.menu.toggle').click(function () {
-      $('.m-item').toggleClass('m-mobile-hide');
-    });
 
-    $('.ui.dropdown').dropdown({
-      on : 'hover'
-    });
 
     //消息提示关闭初始化
     $('.message .close')
@@ -276,15 +280,24 @@
       loadPage(skipPage);
     });
 
+    //上一页
     $("#prePage").on('click',function () {
       loadPage($("#currentPage").html()-1);
     });
 
+    //下一页
     $("#nextPage").on('click',function () {
       loadPage($("#currentPage").html()-1+2);
     });
 
 
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+      on : 'hover'
+    });
   </script>
 </body>
 </html>
