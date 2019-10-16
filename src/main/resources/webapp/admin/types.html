@@ -1,303 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>分类管理</title>
-  <link rel="stylesheet" href="../static/css/semantic.min.css">
-  <link rel="stylesheet" href="../static/css/me.css">
-  <script src="../static/js/jquery-3.1.1.min.js"></script>
-  <script src="../static/js/semantic.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类管理</title>
+    <link rel="stylesheet" href="../static/css/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+    <script src="../static/js/jquery-3.1.1.min.js"></script>
+    <script src="../static/js/semantic.min.js"></script>
 </head>
 <body>
 
-  <!--导航-->
-  <nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+<!--导航-->
+<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
     <div class="ui container">
-      <div class="ui inverted secondary stackable menu">
-        <h2 class="ui teal header item">管理后台</h2>
-        <a href="blogs.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
-        <a href="#" class="active m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
-        <a href="tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
-        <div class="right m-item m-mobile-hide menu">
-          <div class="ui dropdown  item">
-            <div class="text">
-              <img class="ui avatar image" src="../static/images/head.jpg">
-              侧耳
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">管理后台</h2>
+            <a href="blogs.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
+            <a href="#" class="active m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+            <a href="tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+            <div class="right m-item m-mobile-hide menu">
+                <div class="ui dropdown  item">
+                    <div class="text">
+                        <img class="ui avatar image" src="../static/images/head.jpg">
+                        侧耳
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="#" class="item">注销</a>
+                    </div>
+                </div>
             </div>
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a href="#" class="item">注销</a>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-      <i class="sidebar icon"></i>
+        <i class="sidebar icon"></i>
     </a>
-  </nav>
-  <div class="ui attached pointing menu">
+</nav>
+<div class="ui attached pointing menu">
     <div class="ui container">
-      <div class="right menu">
-        <a href="types-input.html" class="item">新增</a>
-        <a href="#" class="teal active item">列表</a>
-      </div>
+        <div class="right menu">
+            <a href="types-input.html" class="item">新增</a>
+            <a href="#" class="teal active item">列表</a>
+        </div>
     </div>
-  </div>
+</div>
 
-  <!--中间内容-->
-  <div  class="m-container-small m-padded-tb-big">
+<!--中间内容-->
+<div  class="m-container-small m-padded-tb-big">
     <div class="ui container">
 
-      <!--错误信息-->
-      <div class="ui negative mini message hidden" id="negative">
-        <i class="close icon" id="close"></i>
-        <div class="header">
-          提示
-        </div>
-        <ul class="list" id="errorList">
-        </ul>
-      </div>
-
-      <!--操作成功-->
-      <div class="ui blue message hidden" id="success">
-        <div class="header">
-          操作成功！
-        </div>
-      </div>
-
-      <table class="ui compact teal table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>名称</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-
-        <tbody id="tableList">
-          <!--<tr>
-            <td>1</td>
-            <td>刻意练习清单</td>
-            <td>
-              <a onclick="changeType()" class="ui mini teal basic button">编辑</a>
-              <a  class="ui mini red basic button">删除</a>
-            </td>
-          </tr>-->
-        </tbody>
-
-        <tfoot>
-          <tr>
-            <th colspan="6" >
-              <div class="ui mini pagination menu">
-                <button class="ui mini button" id="prePage">上一页</button>
-                <div class="ui dropdown  icon button">
-                  <span class="mini">当前</span>
-                  <span class="text" id="currentPage">1</span>
-                  <div class="menu thePage" id="pageNum">
-                    <div class="item">1</div>
-                  </div>
-                </div>
-                <button class="ui mini button" id="nextPage">下一页</button>
-              </div>
-
-              <a href="types-input.html" class="ui  right floated  button">新增</a>
-            </th>
-          </tr>
-        </tfoot>
-      </table>
-
-    </div>
-  </div>
-
-  <br>
-  <br>
-  <!--底部footer-->
-  <footer class="ui inverted vertical segment">
-    <div class="ui center aligned container">
-      <div class="ui inverted divided stackable grid">
-        <div class="three wide column">
-          <div class="ui inverted link list">
-            <div class="item">
-              <img src="../static/images/head.png" class="ui rounded image" alt="" style="width: 110px">
+        <!--错误信息-->
+        <div class="ui negative mini message hidden" id="negative">
+            <i class="close icon" id="close"></i>
+            <div class="header">
+                提示
             </div>
-          </div>
+            <ul class="list" id="errorList">
+            </ul>
         </div>
-        <div class="three wide column">
-          <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
-          <div class="ui inverted link list">
-            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-          </div>
+
+        <!--操作成功-->
+        <div class="ui blue message hidden" id="success">
+            <div class="header">
+                操作成功！
+            </div>
         </div>
-        <div class="three wide column">
-          <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
-          <div class="ui inverted link list">
-            <a href="#" class="item m-text-thin">Email：tolankai@163.com</a>
-            <a href="#" class="item m-text-thin">QQ：1163731673</a>
-          </div>
+
+        <table class="ui compact teal table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>名称</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+
+            <tbody id="tableList">
+            <!--<tr>
+              <td>1</td>
+              <td>刻意练习清单</td>
+              <td>
+                <a onclick="changeType()" class="ui mini teal basic button">编辑</a>
+                <a  class="ui mini red basic button">删除</a>
+              </td>
+            </tr>-->
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <th colspan="6" >
+                    <div class="ui mini pagination menu">
+                        <button class="ui mini button" id="prePage">上一页</button>
+                        <div class="ui dropdown  icon button">
+                            <span class="mini">共</span>
+                            <span class="mini" id="totalPage"></span>
+                            <span class="mini">页,当前</span>
+                            <span class="text" id="currentPage">1</span>
+                            <div class="menu thePage" id="pageNum">
+                                <div class="item">1</div>
+                            </div>
+                        </div>
+                        <button class="ui mini button" id="nextPage">下一页</button>
+                    </div>
+
+                    <a href="types-input.html" class="ui  right floated  button">新增</a>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>
+
+<br>
+<br>
+<!--底部footer-->
+<footer class="ui inverted vertical segment">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided stackable grid">
+            <div class="three wide column">
+                <div class="ui inverted link list">
+                    <div class="item">
+                        <img src="../static/images/head.png" class="ui rounded image" alt="" style="width: 110px">
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item m-text-thin">Email：tolankai@163.com</a>
+                    <a href="#" class="item m-text-thin">QQ：1163731673</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">MyBlog</h4>
+                <p class="m-text-thin m-text-spaced mini">这是我的个人博客、用于记录学习的心得、和学习过程中遇到的问题等</p>
+            </div>
         </div>
-        <div class="seven wide column">
-          <h4 class="ui inverted header m-text-thin m-text-spaced ">MyBlog</h4>
-          <p class="m-text-thin m-text-spaced mini">这是我的个人博客、用于记录学习的心得、和学习过程中遇到的问题等</p>
-        </div>
-      </div>
-      <div class="ui inverted section divider"></div>
-      <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © Designed by 侧耳</p>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © Designed by 侧耳</p>
     </div>
 
-  </footer>
+</footer>
 
 
-  <script>
+<script>
     //加载页面时候就请求数据进行渲染
     $(document).ready(function () {
-      var currentPage=$("#currentPage").html();
-      loadPage(currentPage);
+        var currentPage=$("#currentPage").html();
+        loadPage(currentPage);
 
     });
 
     //加载指定页码的数据
     function loadPage(pageNum){
-      $.ajax({
-        url:"../adminUser/type/list?currentPage="+pageNum,
-        type:"GET",
-        dataType:"json",
-        success:function (data) {
-          //加载成功
-          if (data.status){
-            var typePage=data.content;
-            var typeList = typePage.pageList;
-            //页面有数据时
-            if (typeList!="") {
-              var toTable="";
-              //填入list
-              for (var i=0; i<typeList.length; i++){
-                var theNameType="\'"+typeList[i].nameType+"\'";
-                toTable+= "<tr>"+
-                        "<td>"+typeList[i].id+"</td>"+
-                        "<td>"+typeList[i].nameType+"</td>"+
-                        "<td><a onclick=changeType("+typeList[i].id+","+theNameType+") class='ui mini teal basic button'>编辑</a>"+
-                        "<a onclick='deleteType("+typeList[i].id+")' class='ui mini red basic button'>删除</a></td>"+
-                        "</tr>";
-              }
-              $("#tableList").html(toTable);
+        $.ajax({
+            url:"../adminUser/type/list?currentPage="+pageNum,
+            type:"GET",
+            dataType:"json",
+            success:function (data) {
+                //加载成功
+                if (data.status){
+                    var typePage=data.content;
+                    var typeList = typePage.pageList;
+                    //页面有数据时
+                    if (typeList!="") {
+                        var toTable="";
+                        //填入list
+                        for (var i=0; i<typeList.length; i++){
+                            var theNameType="\'"+typeList[i].nameType+"\'";
+                            toTable+= "<tr>"+
+                                "<td>"+typeList[i].id+"</td>"+
+                                "<td>"+typeList[i].nameType+"</td>"+
+                                "<td><a onclick=changeType("+typeList[i].id+","+theNameType+") class='ui mini teal basic button'>编辑</a>"+
+                                "<a onclick='deleteType("+typeList[i].id+")' class='ui mini red basic button'>删除</a></td>"+
+                                "</tr>";
+                        }
+                        $("#tableList").html(toTable);
 
-              //生成页码
-              var totalPage=typePage.totalPage;
-              var currentPage=typePage.currentPage;
+                        //生成页码
+                        var totalPage=typePage.totalPage;
+                        var currentPage=typePage.currentPage;
 
-              $("#currentPage").html(currentPage);
-              var pageNum="";
-              for(var i=0;i<totalPage;i++){
-                pageNum+="<div class='item'>"+(i+1)+"</div>";
-              }
-              $("#pageNum").html(pageNum);
-              //alert(typeList.length+typeList[0].nameType);
+                        $("#currentPage").html(currentPage);
+                        var pageNum="";
+                        //如果总页码数小于等于5就从1开始生成
+                        if(totalPage<=5){
+                            for(var i=0;i<totalPage;i++){
+                                if (i+1==currentPage){
+                                    pageNum+="<div style='text-align:center' class='item active'>"+(i+1)+"</div>";
+                                }else {
+                                    pageNum+="<div style='text-align:center' class='item'>"+(i+1)+"</div>";
+                                }
+                            }
+                        }else {
+                            //当前页码小于等于2
+                            if (currentPage<=2){
+                                for(var i=0;i<5;i++){
+                                    if (i+1==currentPage){
+                                        pageNum+="<div style='text-align:center' class='item active'>"+(i+1)+"</div>";
+                                    }else {
+                                        pageNum+="<div style='text-align:center' class='item'>"+(i+1)+"</div>";
+                                    }
+                                }
+                                //如果生成页码后面还有页
+                                if (currentPage+2<totalPage){
+                                    pageNum+="<div style='text-align:center'>...</div>";
+                                }
+                            }else {
+                                //如果当前页码后面还有三页或更多页就从中间生成
+                                if (totalPage-currentPage>=3){
+                                    //如果生成页码前面还有页
+                                    if (currentPage-2>1){
+                                        pageNum+="<div style='text-align:center'>...</div>";
+                                    }
+                                    //j用来记录次数 i用来生成页码数
+                                    for(var i=currentPage-2, j=0; j<5; i++, j++){
+                                        if (i==currentPage){
+                                            pageNum+="<div style='text-align:center' class='item active'>"+(i)+"</div>";
+                                        }else {
+                                            pageNum+="<div style='text-align:center' class='item'>"+(i)+"</div>";
+                                        }
+                                    }
+                                    //如果生成页码后面还有页
+                                    if (currentPage+2<totalPage){
+                                        pageNum+="<div  style='text-align:center'>...</div>";
+                                    }
+                                } else{
+                                    //如果生成页码前面还有页
+                                    if (currentPage-2>1){
+                                        pageNum+="<div style='text-align:center'>...</div>";
+                                    }
+                                    //少于三页就在当前页码前面多生成
+                                    var preCount = 3-(totalPage-currentPage);
+                                    for(var i=currentPage-1-preCount, j=0; j<5; i++, j++){
+                                        if (i==currentPage){
+                                            pageNum+="<div style='text-align:center' class='item active'>"+(i)+"</div>";
+                                        }else {
+                                            pageNum+="<div style='text-align:center' class='item'>"+(i)+"</div>";
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
-              //判断当前页码是否为第一页
-              if (currentPage==1){
-                $("#prePage").addClass("disabled");
-              } else {
-                $("#prePage").removeClass("disabled");
-              }
-              //判断当前是否为最后一页
-              if (!typePage.haveMore){
-                $("#nextPage").addClass("disabled");
-              } else {
-                $("#nextPage").removeClass("disabled");
-              }
-            }else {
-              $("#errorList li").remove();
-              $("#errorList").append("<li>没有数据</li>");
-              $("#negative").removeClass("hidden");
-              $("#tableList").html("");
-              $("#prePage").addClass("disabled");
-              $("#nextPage").addClass("disabled");
-              setTimeout(function () {
-                $("#negative").addClass("hidden");
-              },1000);
-              return false;
+                        $("#pageNum").html(pageNum);
+                        $("#totalPage").html(totalPage);
+                        //alert(typeList.length+typeList[0].nameType);
+
+                        //判断当前页码是否为第一页
+                        if (currentPage==1){
+                            $("#prePage").addClass("disabled");
+                        } else {
+                            $("#prePage").removeClass("disabled");
+                        }
+                        //判断当前是否为最后一页
+                        if (!typePage.haveMore){
+                            $("#nextPage").addClass("disabled");
+                        } else {
+                            $("#nextPage").removeClass("disabled");
+                        }
+                    }else {
+                        //如果没有数据而且不是第一页就向前跳一页
+                        var currentPage = $("#currentPage").html();
+                        if (currentPage>1){
+                            loadPage(currentPage-1);
+                        } else {
+                            $("#errorList li").remove();
+                            $("#errorList").append("<li>没有数据</li>");
+                            $("#tableList").html("");
+                            $("#negative").removeClass("hidden");
+                            $("#prePage").addClass("disabled");
+                            $("#nextPage").addClass("disabled");
+                            setTimeout(function () {
+                                $("#negative").addClass("hidden");
+                            },1000);
+                            return false;
+                        }
+                    }
+                } else {
+                    $("#errorList li").remove();
+                    $("#errorList").append("<li>加载失败</li>");
+                    $("#negative").removeClass("hidden");
+                    return false;
+                }
             }
-          } else {
-            $("#errorList li").remove();
-            $("#errorList").append("<li>加载失败</li>");
-            $("#negative").removeClass("hidden");
-            return false;
-          }
-        }
-      });
+        });
     }
 
 
 
     //消息提示关闭初始化
     $('.message .close')
-      .on('click', function () {
-        $(this)
-          .closest('.message')
-          .transition('fade');
-      });
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade');
+        });
 
     function changeType(id,typeName) {
-      //使用url参数方式进行页面间的传值
-      $(location).attr("href", "./types-input.html"+"?id="+id+"&typeName="+typeName);
+        //使用url参数方式进行页面间的传值
+        $(location).attr("href", "./types-input.html"+"?id="+id+"&typeName="+typeName);
     }
     function deleteType(id) {
-      if(confirm("是否删除该分类:"+id)) {
-        $.ajax({
-          url: "../adminUser/type/delete?id=" + id,
-          dataType: "json",
-          type: "POST",
-          success: function (data) {
-            if (data.status) {
-              $("#success").removeClass("hidden");
-              setTimeout(function () {
-                $("#success").addClass("hidden");
-                var currentPage=$("#currentPage").html();
-                loadPage(currentPage);
-              },1000);
-            }
-          }
-        });
-      }else {
+        if(confirm("是否删除该分类:"+id)) {
+            $.ajax({
+                url: "../adminUser/type/delete?id=" + id,
+                dataType: "json",
+                type: "POST",
+                success: function (data) {
+                    if (data.status) {
+                        $("#success").removeClass("hidden");
+                        setTimeout(function () {
+                            $("#success").addClass("hidden");
+                            var currentPage=$("#currentPage").html();
+                            loadPage(currentPage);
+                        },1000);
+                    }
+                }
+            });
+        }else {
 
-      }
+        }
     }
 
     //关闭错误信息
     $("#close").click(function () {
-      $("#negative").addClass("hidden");
+        $("#negative").addClass("hidden");
     });
 
     //页面跳转
     $(document).on('click', 'div.thePage .item', function () {
-      //alert($(this).html()+"被点击了");
-      var skipPage = $(this).html();
-      $("#currentPage").html(skipPage);
-      loadPage(skipPage);
+        //alert($(this).html()+"被点击了");
+        var skipPage = $(this).html();
+        $("#currentPage").html(skipPage);
+        loadPage(skipPage);
     });
 
     //上一页
     $("#prePage").on('click',function () {
-      loadPage($("#currentPage").html()-1);
+        loadPage($("#currentPage").html()-1);
     });
 
     //下一页
     $("#nextPage").on('click',function () {
-      loadPage($("#currentPage").html()-1+2);
+        loadPage($("#currentPage").html()-1+2);
     });
 
 
     $('.menu.toggle').click(function () {
-      $('.m-item').toggleClass('m-mobile-hide');
+        $('.m-item').toggleClass('m-mobile-hide');
     });
 
     $('.ui.dropdown').dropdown({
-      on : 'hover'
+        on : 'hover'
     });
-  </script>
+</script>
 </body>
 </html>
