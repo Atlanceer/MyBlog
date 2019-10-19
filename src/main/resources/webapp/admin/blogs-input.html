@@ -11,6 +11,7 @@
     <script src="../static/js/jquery-3.1.1.min.js"></script>
     <script src="../static/js/semantic.min.js"></script>
     <script src="../static/lib/editormd/editormd.min.js"></script>
+    <script src="../static/js/jquery.params.js"></script>
 </head>
 <body>
     <!--导航-->
@@ -51,8 +52,9 @@
     <!--中间内容-->
     <div  class="m-container-small m-padded-tb-big">
         <div class="ui container">
-            <form action="#" method="post" class="ui form">
+            <form id="submitBlog" class="ui form">
 
+                <input style="display:none" name="blogId" value="" id="blogId">
                 <div class="required field">
                     <div class="ui left labeled input">
                         <div class="ui selection compact teal basic dropdown label">
@@ -71,17 +73,17 @@
 
                 <div class="field">
                     <div id="md-content" style="z-index: 1 !important;">
-            <textarea placeholder="博客内容" name="content" style="display: none">
-              [TOC]
+                        <textarea placeholder="博客内容" name="content" style="display: none">
+                            [TOC]
 
-#### Disabled options
+                            #### Disabled options
 
-- TeX (Based on KaTeX);
-- Emoji;
-- Task lists;
-- HTML tags decode;
-- Flowchart and Sequence Diagram;
-            </textarea>
+                            - TeX (Based on KaTeX);
+                            - Emoji;
+                            - Task lists;
+                            - HTML tags decode;
+                            - Flowchart and Sequence Diagram;
+                        </textarea>
                     </div>
                 </div>
 
@@ -110,6 +112,12 @@
                                 <div class="menu">
                                     <div class="item" data-value="1">java</div>
                                     <div class="item" data-value="2">JavaScript</div>
+                                    <div class="item" data-value="3">python</div>
+                                    <div class="item" data-value="4">学习</div>
+                                    <div class="item" data-value="5">娱乐</div>
+                                    <div class="item" data-value="6">记录</div>
+                                    <div class="item" data-value="7">看点</div>
+                                    <div class="item" data-value="8">go</div>
                                 </div>
                             </div>
                         </div>
@@ -119,30 +127,43 @@
                 <div class="field">
                     <div class="ui left labeled input">
                         <label class="ui teal basic label">首图</label>
-                        <input type="text" name="indexPicture" placeholder="首图引用地址">
+                        <input type="text" name="indexPicture" placeholder="首图引用地址(用于封面)">
                     </div>
 
                 </div>
 
                 <div class="inline fields">
-                    <div class="field">
+                    <!--<div class="field">
                         <div class="ui checkbox">
                             <input type="checkbox" id="recommend" name="recommend" checked class="hidden">
                             <label for="recommend">推荐</label>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" id="publish" name="publish" checked class="hidden">
+                            <label for="publish">发布</label>
+
+                        </div>
+                        <!--<i class="circular heart icon link" data-content="取消发布选项意味着别人无法访问该条博客，你自己在可以进行修改" data-variation="wide"></i>-->
+                        <div class="ui small circular label" style="background-color: unset"
+                             data-tooltip="取消发布选项意味着仅保存，&#13;别人无法访问该条博客"
+                             data-position="top left">
+                            <i class="question icon black" style="width: 90%"></i>
+                        </div>
+                    </div>
+                    <!--<div class="field">
                         <div class="ui checkbox">
                             <input type="checkbox" id="shareInfo" name="shareInfo" class="hidden">
                             <label for="shareInfo">转载声明</label>
                         </div>
-                    </div>
-                    <div class="field">
+                    </div>-->
+                    <!--<div class="field">
                         <div class="ui checkbox">
                             <input type="checkbox" id="appreciation" name="appreciation" class="hidden">
                             <label for="appreciation">赞赏</label>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="field">
                         <div class="ui checkbox">
                             <input type="checkbox" id="comment" name="comment" class="hidden">
@@ -155,8 +176,8 @@
 
                 <div class="ui right aligned container">
                     <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
-                    <button class="ui secondary button">保存</button>
-                    <button class="ui teal button">发布</button>
+                    <button type="button" class="ui secondary button">保存</button>
+                    <button type="button" id="submit" class="ui teal button">发布</button>
                 </div>
 
             </form>
@@ -201,6 +222,70 @@
 
     </footer>
     <script>
+        //加载页面时候就请求数据进行渲染
+        $(document).ready(function () {
+            //判断是否为修改
+            var id=$.query.get("id");
+            if (id!=""){
+                //alert(id);
+                $("#tagName").val($.query.get("tagName"));
+                $("#tagId").val(id);
+            }
+            $.ajax({
+                url:""
+            });
+        });
+
+        $("#submit").click(function () {
+            var url="../adminUser/blog/add";
+            var formData = $("#submitBlog").serializeArray();
+            alert(formData);
+            //alert(formData.length)
+            //alert(formData[0].value);
+            if (formData[0].value!=""){
+                url="../adminUser/blog/modify";
+            }
+            if (formData[1].value=="") {
+                $("#errorList li").remove();
+                $("#errorList").append("<li>请输入分类名称</li>");
+                $("#negative").removeClass("hidden");
+                return false;
+            }
+            $.ajax({
+                url:url,
+                type: "POST",
+                dataType:"json",
+                data:formData,
+                success:function (data) {
+                    if (data.status){
+                        //显示成功信息
+                        $("#success").removeClass("hidden");
+                        //将输入框清空，防止重复提交
+                        $("#tagName").val("");
+                        //延迟加载
+                        setTimeout(function () {
+                            $("#success").addClass("hidden");
+                            $(location).attr("href","tags.html");
+                        },1000);
+                    } else {
+                        $("#errorList li").remove();
+                        $("#errorList").append("<li>出错</li>");
+                    }
+                }
+            });
+        });
+
+        //关闭错误信息
+        $("#close").click(function () {
+            $("#negative").addClass("hidden");
+        });
+
+        //input输入框焦点事件
+        $("input").focus(function () {
+            $("#errorList li").remove();
+            $("#negative").addClass("hidden");
+        });
+
         //初始化Markdown编辑器
         var contentEditor;
         $(function() {

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -159,7 +160,7 @@ public class AdminController {
 
     /**
      * 添加博客标签
-     * @param typeName
+     * @param tagName
      * @return
      */
     @RequestMapping(value = "/tag/add", method = RequestMethod.POST)
@@ -209,6 +210,47 @@ public class AdminController {
         }else {
             return new MyResult(false,"修改失败",201);
         }
+    }
+
+    /**
+     * 添加博客
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/blog/add", method = RequestMethod.POST)
+    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture){
+        log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture);
+        return null;
+    }
+
+    /**
+     * 获取博客列表
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/blog/list", method = RequestMethod.GET)
+    public MyResult getBlogList(String currentPage, String type, String tag, int ifRecommend){
+        return  null;
+    }
+
+    /**
+     * 博客修改
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/blog/modify", method = RequestMethod.POST)
+    public MyResult modifyBlog(String id){
+        return null;
+    }
+
+    /**
+     * 博客删除
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/blog/delete", method = RequestMethod.POST)
+    public MyResult deleteBlog(String id){
+        return null;
     }
 
 }

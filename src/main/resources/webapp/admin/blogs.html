@@ -49,14 +49,32 @@
     <!--中间内容-->
     <div  class="m-container-small m-padded-tb-big">
         <div class="ui container">
-            <form action="#" method="post" class="ui segment form">
+
+            <!--错误信息-->
+            <div class="ui negative mini message hidden" id="negative">
+                <i class="close icon" id="close"></i>
+                <div class="header">
+                    提示
+                </div>
+                <ul class="list" id="errorList">
+                </ul>
+            </div>
+            <!--操作成功-->
+            <div class="ui blue message hidden" id="success">
+                <div class="header">
+                    操作成功！
+                </div>
+            </div>
+
+            <!--搜索的表单-->
+            <form id="searchForm" class="ui segment form">
                 <div class="inline fields">
                     <div class="field">
                         <input type="text" name="title" placeholder="标题">
                     </div>
                     <div class="field">
                         <div class="ui selection dropdown">
-                            <input type="hidden" name="type">
+                            <!--<input type="hidden" name="type">-->
                             <i class="dropdown icon"></i>
                             <div class="default text">分类</div>
                             <div class="menu">
@@ -72,12 +90,13 @@
                         </div>
                     </div>
                     <div class="field">
-                        <button class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
+                        <button class="ui mini teal basic button" id="search"><i class="search icon"></i>搜索</button>
                     </div>
                 </div>
             </form>
 
-            <table class="ui celled table">
+            <!--<table class="ui celled table">-->
+            <table class="ui compact teal table">
                 <thead>
                 <tr>
                     <th></th>
@@ -103,12 +122,21 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th colspan="6">
+                    <th colspan="6" >
                         <div class="ui mini pagination menu">
-                            <a class=" item">上一页</a>
-                            <a class=" item">下一页</a>
+                            <button class="ui mini button" id="prePage">上一页</button>
+                            <div class="ui dropdown  icon button">
+                                <span class="mini">共</span>
+                                <span class="mini" id="totalPage"></span>
+                                <span class="mini">页,当前</span>
+                                <span class="text" id="currentPage">1</span>
+                                <div class="menu thePage" id="pageNum">
+                                    <div class="item">1</div>
+                                </div>
+                            </div>
+                            <button class="ui mini button" id="nextPage">下一页</button>
                         </div>
-                        <a href="#" class="ui mini right floated teal basic button">新增</a>
+                        <a href="tags-input.html" class="ui  right floated  button">新增</a>
                     </th>
                 </tr>
                 </tfoot>
@@ -156,6 +184,199 @@
     </footer>
 
     <script>
+        //加载页面时候就请求数据进行渲染
+        $(document).ready(function () {
+            var currentPage=$("#currentPage").html();
+            loadPage(currentPage);
+
+        });
+
+        //加载指定页码的数据
+        function loadPage(pageNum){
+            $.ajax({
+                url:"../adminUser/tag/list?currentPage="+pageNum,
+                type:"GET",
+                dataType:"json",
+                success:function (data) {
+                    //加载成功
+                    if (data.status){
+                        var tagPage=data.content;
+                        var tagList = tagPage.pageList;
+                        //页面有数据时
+                        if (tagList!="") {
+                            var toTable="";
+                            //填入list
+                            for (var i=0; i<tagList.length; i++){
+                                var theNameTag="\'"+tagList[i].nameTag+"\'";
+                                toTable+= "<tr>"+
+                                    "<td>"+tagList[i].id+"</td>"+
+                                    "<td>"+tagList[i].nameTag+"</td>"+
+                                    "<td><a onclick=changeTag("+tagList[i].id+","+theNameTag+") class='ui mini teal basic button'>编辑</a>"+
+                                    "<a onclick='deleteTag("+tagList[i].id+")' class='ui mini red basic button'>删除</a></td>"+
+                                    "</tr>";
+                            }
+                            $("#tableList").html(toTable);
+
+                            //生成页码
+                            var totalPage=tagPage.totalPage;
+                            var currentPage=tagPage.currentPage;
+
+                            $("#currentPage").html(currentPage);
+                            var pageNum="";
+                            //如果总页码数小于等于5就从1开始生成
+                            if(totalPage<=5){
+                                for(var i=0;i<totalPage;i++){
+                                    if (i+1==currentPage){
+                                        pageNum+="<div style='text-align:center' class='item active'>"+(i+1)+"</div>";
+                                    }else {
+                                        pageNum+="<div style='text-align:center' class='item'>"+(i+1)+"</div>";
+                                    }
+                                }
+                            }else {
+                                //当前页码小于等于2
+                                if (currentPage<=2){
+                                    for(var i=0;i<5;i++){
+                                        if (i+1==currentPage){
+                                            pageNum+="<div style='text-align:center' class='item active'>"+(i+1)+"</div>";
+                                        }else {
+                                            pageNum+="<div style='text-align:center' class='item'>"+(i+1)+"</div>";
+                                        }
+                                    }
+                                    //如果生成页码后面还有页
+                                    if (currentPage+2<totalPage){
+                                        pageNum+="<div style='text-align:center'>...</div>";
+                                    }
+                                }else {
+                                    //如果当前页码后面还有三页或更多页就从中间生成
+                                    if (totalPage-currentPage>=3){
+                                        //如果生成页码前面还有页
+                                        if (currentPage-2>1){
+                                            pageNum+="<div style='text-align:center'>...</div>";
+                                        }
+                                        //j用来记录次数 i用来生成页码数
+                                        for(var i=currentPage-2, j=0; j<5; i++, j++){
+                                            if (i==currentPage){
+                                                pageNum+="<div style='text-align:center' class='item active'>"+(i)+"</div>";
+                                            }else {
+                                                pageNum+="<div style='text-align:center' class='item'>"+(i)+"</div>";
+                                            }
+                                        }
+                                        //如果生成页码后面还有页
+                                        if (currentPage+2<totalPage){
+                                            pageNum+="<div  style='text-align:center'>...</div>";
+                                        }
+                                    } else{
+                                        //如果生成页码前面还有页
+                                        if (currentPage-2>1){
+                                            pageNum+="<div style='text-align:center'>...</div>";
+                                        }
+                                        //少于三页就在当前页码前面多生成
+                                        var preCount = 3-(totalPage-currentPage);
+                                        for(var i=currentPage-1-preCount, j=0; j<5; i++, j++){
+                                            if (i==currentPage){
+                                                pageNum+="<div style='text-align:center' class='item active'>"+(i)+"</div>";
+                                            }else {
+                                                pageNum+="<div style='text-align:center' class='item'>"+(i)+"</div>";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            $("#pageNum").html(pageNum);
+                            $("#totalPage").html(totalPage);
+                            //alert(typeList.length+typeList[0].nameType);
+
+                            //判断当前页码是否为第一页
+                            if (currentPage==1){
+                                $("#prePage").addClass("disabled");
+                            } else {
+                                $("#prePage").removeClass("disabled");
+                            }
+                            //判断当前是否为最后一页
+                            if (!tagPage.haveMore){
+                                $("#nextPage").addClass("disabled");
+                            } else {
+                                $("#nextPage").removeClass("disabled");
+                            }
+                        }else {
+                            //如果没有数据而且不是第一页就向前跳一页
+                            var currentPage = $("#currentPage").html();
+                            if (currentPage>1){
+                                loadPage(currentPage-1);
+                            } else {
+                                $("#errorList li").remove();
+                                $("#errorList").append("<li>没有数据</li>");
+                                $("#tableList").html("");
+                                $("#negative").removeClass("hidden");
+                                $("#prePage").addClass("disabled");
+                                $("#nextPage").addClass("disabled");
+                                setTimeout(function () {
+                                    $("#negative").addClass("hidden");
+                                },1000);
+                                return false;
+                            }
+                        }
+                    } else {
+                        $("#errorList li").remove();
+                        $("#errorList").append("<li>加载失败</li>");
+                        $("#negative").removeClass("hidden");
+                        return false;
+                    }
+                }
+            });
+        }
+
+        function changeTag(id,tagName) {
+            //使用url参数方式进行页面间的传值
+            $(location).attr("href", "./tags-input.html"+"?id="+id+"&tagName="+tagName);
+        }
+        function deleteTag(id) {
+            if(confirm("是否删除该标签:"+id)) {
+                $.ajax({
+                    url: "../adminUser/tag/delete?id=" + id,
+                    dataType: "json",
+                    type: "POST",
+                    success: function (data) {
+                        if (data.status) {
+                            $("#success").removeClass("hidden");
+                            setTimeout(function () {
+                                $("#success").addClass("hidden");
+                                var currentPage=$("#currentPage").html();
+                                loadPage(currentPage);
+                            },1000);
+                        }
+                    }
+                });
+            }else {
+
+            }
+        }
+
+        //关闭错误信息
+        $("#close").click(function () {
+            $("#negative").addClass("hidden");
+        });
+
+        //页面跳转
+        $(document).on('click', 'div.thePage .item', function () {
+            //alert($(this).html()+"被点击了");
+            var skipPage = $(this).html();
+            $("#currentPage").html(skipPage);
+            loadPage(skipPage);
+        });
+
+        //上一页
+        $("#prePage").on('click',function () {
+            loadPage($("#currentPage").html()-1);
+        });
+
+        //下一页
+        $("#nextPage").on('click',function () {
+            loadPage($("#currentPage").html()-1+2);
+        });
+
+
         $('.menu.toggle').click(function () {
             $('.m-item').toggleClass('m-mobile-hide');
         });
