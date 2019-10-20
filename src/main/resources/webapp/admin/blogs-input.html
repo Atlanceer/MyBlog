@@ -143,11 +143,11 @@
                         <div class="ui checkbox">
                             <input type="checkbox" id="publish" name="publish" checked class="hidden">
                             <label for="publish">发布</label>
-
                         </div>
                         <!--<i class="circular heart icon link" data-content="取消发布选项意味着别人无法访问该条博客，你自己在可以进行修改" data-variation="wide"></i>-->
                         <div class="ui small circular label" style="background-color: unset"
                              data-tooltip="取消发布选项意味着仅保存，&#13;别人无法访问该条博客"
+                             data-variation="mini"
                              data-position="top left">
                             <i class="question icon black" style="width: 90%"></i>
                         </div>
@@ -169,6 +169,12 @@
                             <input type="checkbox" id="comment" name="comment" class="hidden">
                             <label for="comment">评论</label>
                         </div>
+                        <div class="ui small circular label" style="background-color: unset"
+                             data-tooltip="选择即打开该条博客评论功能"
+                             data-variation="mini"
+                             data-position="top left">
+                            <i class="question icon black" style="width: 90%"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -176,8 +182,8 @@
 
                 <div class="ui right aligned container">
                     <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
-                    <button type="button" class="ui secondary button">保存</button>
-                    <button type="button" id="submit" class="ui teal button">发布</button>
+                    <!--<button type="button" class="ui secondary button">保存</button>-->
+                    <button type="button" id="submit" class="ui teal button">提交</button>
                 </div>
 
             </form>

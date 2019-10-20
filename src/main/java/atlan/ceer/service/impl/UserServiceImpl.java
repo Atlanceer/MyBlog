@@ -1,16 +1,24 @@
 package atlan.ceer.service.impl;
 
+import atlan.ceer.mapper.QueryMapper;
 import atlan.ceer.mapper.UserMapper;
+import atlan.ceer.model.UserInfSimple;
 import atlan.ceer.pojo.UserExample;
 import atlan.ceer.service.UserService;
 import atlan.ceer.utils.Md5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QueryMapper queryMapper;
     @Autowired
     private Md5Util md5Util;
 
@@ -37,5 +45,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean register() {
         return false;
+    }
+
+    @Override
+    public UserInfSimple getUserInfSimple(Map<String, String> map) {
+        try {
+            UserInfSimple userInfSimple = queryMapper.getUserInfSimple(map);
+            return userInfSimple;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("查询用户简易信息失败");
+            return null;
+        }
     }
 }

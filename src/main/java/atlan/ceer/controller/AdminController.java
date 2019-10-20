@@ -3,6 +3,7 @@ package atlan.ceer.controller;
 
 import atlan.ceer.model.MyResult;
 import atlan.ceer.model.QueryPage;
+import atlan.ceer.model.UserInfSimple;
 import atlan.ceer.service.BlogService;
 import atlan.ceer.service.UserService;
 import atlan.ceer.utils.AESUtil;
@@ -46,16 +47,20 @@ public class AdminController {
     public boolean login(String username, String password, HttpServletResponse response, HttpServletRequest request){
         //log.info(username+"============"+password);
         if (userService.login(username,password)) {
-            //获取session
+            //查询用户简易信息
+            Map<String, String> map = new HashMap<>();
+            map.put("username",username);
+            UserInfSimple userInfSimple = userService.getUserInfSimple(map);
+
             HttpSession httpSession = request.getSession();
             //设置session
-            httpSession.setAttribute("blog_session", aesUtil.AESEncode(username));
+            httpSession.setAttribute("blog_session", aesUtil.AESEncode(userInfSimple.getUserId()));
 
             //添加cookie记录用户信息，设置中文转码
             Cookie blogCookie = null;
             try {
                 //blogCookie = new Cookie("blog_cookie", URLEncoder.encode(username,"UTF-8"));
-                blogCookie = new Cookie("blog_cookie", aesUtil.AESEncode(username));
+                blogCookie = new Cookie("blog_cookie", aesUtil.AESEncode(userInfSimple.getUserId()));
                 //log.info(blogCookie.getName()+"-->>>>>"+blogCookie.getValue());
                 //设置过期时间（秒为单位）一天：60*60*24
                 blogCookie.setMaxAge(60*60*24);
@@ -218,8 +223,9 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/blog/add", method = RequestMethod.POST)
-    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture){
-        log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture);
+    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture, String publish, String comment){
+        log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture+"==="+publish+"==="+comment);
+
         return null;
     }
 

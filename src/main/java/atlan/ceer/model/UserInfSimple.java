@@ -1,9 +1,11 @@
 package atlan.ceer.model;
 
+import java.io.Serializable;
+
 /**
  * cookie里面存放的字段
  */
-public class UserInfSimple {
+public class UserInfSimple implements Serializable {
     //用户名
     private String username;
     //用户id

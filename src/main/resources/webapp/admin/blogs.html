@@ -85,10 +85,16 @@
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
+                            <input type="checkbox" id="ifPublish" name="ifPublish">
+                            <label for="ifPublish">发布的</label>
+                        </div>
+                    </div>
+                    <!--<div class="field">
+                        <div class="ui checkbox">
                             <input type="checkbox" id="recommend" name="recommend">
                             <label for="recommend">推荐</label>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="field">
                         <button class="ui mini teal basic button" id="search"><i class="search icon"></i>搜索</button>
                     </div>
@@ -102,7 +108,7 @@
                     <th></th>
                     <th>标题</th>
                     <th>类型</th>
-                    <th>推荐</th>
+                    <th>发布状态</th>
                     <th>更新时间</th>
                     <th>操作</th>
                 </tr>
@@ -136,7 +142,7 @@
                             </div>
                             <button class="ui mini button" id="nextPage">下一页</button>
                         </div>
-                        <a href="tags-input.html" class="ui  right floated  button">新增</a>
+                        <a href="blogs-input.html" class="ui  right floated  button">新增</a>
                     </th>
                 </tr>
                 </tfoot>

@@ -9,4 +9,19 @@
         select * from tag_blog
         limit #{beginNum},10;
     </select>
+    <select id="getUserInfSimple" parameterType="HashMap" resultType="atlan.ceer.model.UserInfSimple">
+        select id,nickname,username,avatar
+        from user
+        <where>
+            <if test="username != null">
+                username = #{username}
+            </if>
+            <if test="nickname ! =null">
+                and nickname = #{nickname}
+            </if>
+            <if test="email != null">
+                and email = #{email}
+            </if>
+        </where>
+    </select>
 </mapper>

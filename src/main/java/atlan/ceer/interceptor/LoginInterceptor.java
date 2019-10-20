@@ -37,10 +37,10 @@ public class LoginInterceptor implements HandlerInterceptor {
                         //String username=URLDecoder.decode(cookie.getValue(), "utf-8");
                         //获取cookie的值并解密
                         //log.info(cookie.getValue()+"=======");
-                        String username=aesUtil.AESDecode(cookie.getValue());
+                        String userid=aesUtil.AESDecode(cookie.getValue());
 
-                        session.setAttribute("blog_session", aesUtil.AESEncode(username));
-                        log.info("用户重新登录成功"+username);
+                        session.setAttribute("blog_session", aesUtil.AESEncode(userid));
+                        log.info("用户重新登录成功:id->"+userid);
                         ifReLogin=true;
                     }
                 }
