@@ -51,16 +51,17 @@ public class AdminController {
             Map<String, String> map = new HashMap<>();
             map.put("username",username);
             UserInfSimple userInfSimple = userService.getUserInfSimple(map);
+            log.info(userInfSimple.toString());
 
             HttpSession httpSession = request.getSession();
             //设置session
-            httpSession.setAttribute("blog_session", aesUtil.AESEncode(userInfSimple.getUserId()));
+            httpSession.setAttribute("blog_session", aesUtil.AESEncode(userInfSimple.getId()));
 
             //添加cookie记录用户信息，设置中文转码
             Cookie blogCookie = null;
             try {
                 //blogCookie = new Cookie("blog_cookie", URLEncoder.encode(username,"UTF-8"));
-                blogCookie = new Cookie("blog_cookie", aesUtil.AESEncode(userInfSimple.getUserId()));
+                blogCookie = new Cookie("blog_cookie", aesUtil.AESEncode(userInfSimple.getId()));
                 //log.info(blogCookie.getName()+"-->>>>>"+blogCookie.getValue());
                 //设置过期时间（秒为单位）一天：60*60*24
                 blogCookie.setMaxAge(60*60*24);
@@ -225,7 +226,24 @@ public class AdminController {
     @RequestMapping(value = "/blog/add", method = RequestMethod.POST)
     public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture, String publish, String comment){
         log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture+"==="+publish+"==="+comment);
-
+        Map<String, Object> map = new HashMap<>();
+        map.put("title",title);
+        map.put("content",content);
+        map.put("type",type);
+        map.put("tag",tag);
+        if (indexPicture!=null&&!indexPicture.equals("")){
+            map.put("indexPicture",indexPicture);
+        }
+        if (publish!=null&&!publish.equals("")){
+            if (publish.equals("on")){
+                map.put("publish",1);
+            }
+        }
+        if (comment!=null&&!comment.equals("")){
+            if (comment.equals("on")){
+                map.put("comment",1);
+            }
+        }
         return null;
     }
 

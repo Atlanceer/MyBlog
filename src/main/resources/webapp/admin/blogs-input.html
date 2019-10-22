@@ -178,7 +178,23 @@
                     </div>
                 </div>
 
-                <div class="ui error message"></div>
+                <!--<div class="ui error message"></div>-->
+                <!--错误信息-->
+                <div class="ui negative mini message hidden" id="negative">
+                    <i class="close icon" id="close"></i>
+                    <div class="header">
+                        提示
+                    </div>
+                    <ul class="list" id="errorList">
+                    </ul>
+                </div>
+
+                <!--添加成功-->
+                <div class="ui blue message hidden" id="success">
+                    <div class="header">
+                        操作成功！
+                    </div>
+                </div>
 
                 <div class="ui right aligned container">
                     <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
@@ -245,7 +261,7 @@
         $("#submit").click(function () {
             var url="../adminUser/blog/add";
             var formData = $("#submitBlog").serializeArray();
-            alert(formData);
+            //alert(formData);
             //alert(formData.length)
             //alert(formData[0].value);
             if (formData[0].value!=""){
@@ -253,7 +269,25 @@
             }
             if (formData[1].value=="") {
                 $("#errorList li").remove();
-                $("#errorList").append("<li>请输入分类名称</li>");
+                $("#errorList").append("<li>请输入标题</li>");
+                $("#negative").removeClass("hidden");
+                return false;
+            }
+            if (formData[2].value=="") {
+                $("#errorList li").remove();
+                $("#errorList").append("<li>请填写播客内容</li>");
+                $("#negative").removeClass("hidden");
+                return false;
+            }
+            if (formData[3].value=="") {
+                $("#errorList li").remove();
+                $("#errorList").append("<li>请选择分类</li>");
+                $("#negative").removeClass("hidden");
+                return false;
+            }
+            if (formData[4].value=="") {
+                $("#errorList li").remove();
+                 $("#errorList").append("<li>请添加标签</li>");
                 $("#negative").removeClass("hidden");
                 return false;
             }
@@ -310,7 +344,7 @@
             on : 'hover'
         });
 
-        $('.ui.form').form({
+        /*$('.ui.form').form({
             fields : {
                 title : {
                     identifier: 'title',
@@ -320,7 +354,7 @@
                     }]
                 }
             }
-        });
+        });*/
 
     </script>
 </body>

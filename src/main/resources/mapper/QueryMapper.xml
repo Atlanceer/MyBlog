@@ -16,7 +16,7 @@
             <if test="username != null">
                 username = #{username}
             </if>
-            <if test="nickname ! =null">
+            <if test="nickname != null">
                 and nickname = #{nickname}
             </if>
             <if test="email != null">

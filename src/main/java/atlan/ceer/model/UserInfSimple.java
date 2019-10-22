@@ -9,7 +9,7 @@ public class UserInfSimple implements Serializable {
     //用户名
     private String username;
     //用户id
-    private String userId;
+    private String id;
     //头像
     private String avatar;
 
@@ -21,12 +21,12 @@ public class UserInfSimple implements Serializable {
         this.username = username;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAvatar() {
@@ -41,7 +41,7 @@ public class UserInfSimple implements Serializable {
     public String toString() {
         return "BlogCookie{" +
                 "username='" + username + '\'' +
-                ", userId='" + userId + '\'' +
+                ", userId='" + id + '\'' +
                 ", avatar='" + avatar + '\'' +
                 '}';
     }
