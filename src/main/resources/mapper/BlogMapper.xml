@@ -120,7 +120,7 @@
       #{isComment,jdbcType=BIT}, #{isPublish,jdbcType=BIT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="atlan.ceer.pojo.Blog">
+  <insert id="insertSelective" parameterType="atlan.ceer.pojo.Blog" useGeneratedKeys="true" keyProperty="id">
     insert into blog
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

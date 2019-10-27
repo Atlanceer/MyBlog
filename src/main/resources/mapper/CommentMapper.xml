@@ -4,8 +4,8 @@
   <resultMap id="BaseResultMap" type="atlan.ceer.pojo.Comment">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="id_blog" jdbcType="INTEGER" property="idBlog" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="from_user" jdbcType="INTEGER" property="fromUser" />
+    <result column="to_user" jdbcType="INTEGER" property="toUser" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="comment_type" jdbcType="INTEGER" property="commentType" />
@@ -70,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, id_blog, nickname, email, content, avatar, comment_type, gmt_create
+    id, id_blog, from_user, to_user, content, avatar, comment_type, gmt_create
   </sql>
   <select id="selectByExample" parameterType="atlan.ceer.pojo.CommentExample" resultMap="BaseResultMap">
     select
@@ -103,11 +103,11 @@
     </if>
   </delete>
   <insert id="insert" parameterType="atlan.ceer.pojo.Comment">
-    insert into comment (id, id_blog, nickname, 
-      email, content, avatar, 
+    insert into comment (id, id_blog, from_user, 
+      to_user, content, avatar, 
       comment_type, gmt_create)
-    values (#{id,jdbcType=INTEGER}, #{idBlog,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{idBlog,jdbcType=INTEGER}, #{fromUser,jdbcType=INTEGER}, 
+      #{toUser,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
       #{commentType,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="atlan.ceer.pojo.Comment">
@@ -119,11 +119,11 @@
       <if test="idBlog != null">
         id_blog,
       </if>
-      <if test="nickname != null">
-        nickname,
+      <if test="fromUser != null">
+        from_user,
       </if>
-      <if test="email != null">
-        email,
+      <if test="toUser != null">
+        to_user,
       </if>
       <if test="content != null">
         content,
@@ -145,11 +145,11 @@
       <if test="idBlog != null">
         #{idBlog,jdbcType=INTEGER},
       </if>
-      <if test="nickname != null">
-        #{nickname,jdbcType=VARCHAR},
+      <if test="fromUser != null">
+        #{fromUser,jdbcType=INTEGER},
       </if>
-      <if test="email != null">
-        #{email,jdbcType=VARCHAR},
+      <if test="toUser != null">
+        #{toUser,jdbcType=INTEGER},
       </if>
       <if test="content != null">
         #{content,jdbcType=VARCHAR},
@@ -180,11 +180,11 @@
       <if test="record.idBlog != null">
         id_blog = #{record.idBlog,jdbcType=INTEGER},
       </if>
-      <if test="record.nickname != null">
-        nickname = #{record.nickname,jdbcType=VARCHAR},
+      <if test="record.fromUser != null">
+        from_user = #{record.fromUser,jdbcType=INTEGER},
       </if>
-      <if test="record.email != null">
-        email = #{record.email,jdbcType=VARCHAR},
+      <if test="record.toUser != null">
+        to_user = #{record.toUser,jdbcType=INTEGER},
       </if>
       <if test="record.content != null">
         content = #{record.content,jdbcType=VARCHAR},
@@ -207,8 +207,8 @@
     update comment
     set id = #{record.id,jdbcType=INTEGER},
       id_blog = #{record.idBlog,jdbcType=INTEGER},
-      nickname = #{record.nickname,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
+      from_user = #{record.fromUser,jdbcType=INTEGER},
+      to_user = #{record.toUser,jdbcType=INTEGER},
       content = #{record.content,jdbcType=VARCHAR},
       avatar = #{record.avatar,jdbcType=VARCHAR},
       comment_type = #{record.commentType,jdbcType=INTEGER},
@@ -223,11 +223,11 @@
       <if test="idBlog != null">
         id_blog = #{idBlog,jdbcType=INTEGER},
       </if>
-      <if test="nickname != null">
-        nickname = #{nickname,jdbcType=VARCHAR},
+      <if test="fromUser != null">
+        from_user = #{fromUser,jdbcType=INTEGER},
       </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
+      <if test="toUser != null">
+        to_user = #{toUser,jdbcType=INTEGER},
       </if>
       <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
@@ -247,8 +247,8 @@
   <update id="updateByPrimaryKey" parameterType="atlan.ceer.pojo.Comment">
     update comment
     set id_blog = #{idBlog,jdbcType=INTEGER},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
+      from_user = #{fromUser,jdbcType=INTEGER},
+      to_user = #{toUser,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
       avatar = #{avatar,jdbcType=VARCHAR},
       comment_type = #{commentType,jdbcType=INTEGER},

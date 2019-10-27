@@ -4,9 +4,11 @@ package atlan.ceer.controller;
 import atlan.ceer.model.MyResult;
 import atlan.ceer.model.QueryPage;
 import atlan.ceer.model.UserInfSimple;
+import atlan.ceer.pojo.Blog;
 import atlan.ceer.service.BlogService;
 import atlan.ceer.service.UserService;
 import atlan.ceer.utils.AESUtil;
+import atlan.ceer.utils.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -30,6 +30,8 @@ import java.util.Map;
 public class AdminController {
     @Autowired
     private AESUtil aesUtil;
+    @Autowired
+    private TimeUtil timeUtil;
     @Autowired
     private UserService userService;
     @Autowired
@@ -116,8 +118,10 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/type/add", method = RequestMethod.POST)
-    public MyResult addType(String typeName){
-        boolean judge = blogService.addType(typeName);
+    public MyResult addType(String typeName, HttpSession httpSession){
+        //获取用户id，存在session中的
+        int userId = getUserId(httpSession);
+        boolean judge = blogService.addType(typeName, userId);
         if (judge){
             return new MyResult(true,"添加成功",200);
         }else {
@@ -130,12 +134,20 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/type/list", method = RequestMethod.GET)
-    public MyResult getTypeList(String currentPage){
+    public MyResult getTypeList(String currentPage, HttpSession httpSession){
+        //获取用户id，存在session中的
+        int userId = getUserId(httpSession);
         Map<String, Object> map = new HashMap<>();
-        map.put("currentPage",currentPage);
         map.put("queryType","type");
-        QueryPage queryPage = blogService.getList(map);
-        return new MyResult(queryPage,true,"查询成功",200);
+        map.put("userId",userId);
+        if (currentPage!=null){
+            map.put("currentPage",currentPage);
+            QueryPage queryPage = blogService.getList(map);
+            return new MyResult(queryPage,true,"查询成功",200);
+        }else {
+            List queryList = blogService.getListForBlog(map);
+            return new MyResult(queryList,true,"查询成功",200);
+        }
     }
 
     /**
@@ -170,8 +182,10 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/tag/add", method = RequestMethod.POST)
-    public MyResult addTag(String tagName){
-        boolean judge = blogService.addTag(tagName);
+    public MyResult addTag(String tagName, HttpSession httpSession){
+        //获取用户id，存在session中的
+        int userId = getUserId(httpSession);
+        boolean judge = blogService.addTag(tagName, userId);
         if (judge){
             return new MyResult(true,"添加成功",200);
         }else {
@@ -184,12 +198,20 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/tag/list", method = RequestMethod.GET)
-    public MyResult getTagList(String currentPage){
+    public MyResult getTagList(String currentPage, HttpSession httpSession){
+        //获取用户id，存在session中的
+        int userId = getUserId(httpSession);
         Map<String, Object> map = new HashMap<>();
-        map.put("currentPage",currentPage);
+        map.put("userId",userId);
         map.put("queryType","tag");
-        QueryPage queryPage = blogService.getList(map);
-        return new MyResult(queryPage,true,"查询成功",200);
+        if (currentPage!=null){
+            map.put("currentPage",currentPage);
+            QueryPage queryPage = blogService.getList(map);
+            return new MyResult(queryPage,true,"查询成功",200);
+        }else {
+            //List queryList = blogService.getListForBlog(map);
+            return new MyResult(blogService.getListForBlog(map),true,"查询成功",200);
+        }
     }
 
     /**
@@ -224,27 +246,46 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/blog/add", method = RequestMethod.POST)
-    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture, String publish, String comment){
-        log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture+"==="+publish+"==="+comment);
-        Map<String, Object> map = new HashMap<>();
-        map.put("title",title);
-        map.put("content",content);
+    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture, String publish, String comment, HttpSession httpSession){
+        //获取用户id，存在session中的
+        int userId = getUserId(httpSession);
+        log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture+"==="+publish+"==="+comment+"==="+userId);
+
+        Blog blog = new Blog();
+        blog.setIdUser(userId);
+        blog.setTitle(title);
+        blog.setContent(content);
+
+        /*Map<String, Object> map = new HashMap<>();
         map.put("type",type);
-        map.put("tag",tag);
+        map.put("tag",tag);*/
         if (indexPicture!=null&&!indexPicture.equals("")){
-            map.put("indexPicture",indexPicture);
+            blog.setFirstPicture(indexPicture);
         }
+        //是否公开
         if (publish!=null&&!publish.equals("")){
             if (publish.equals("on")){
-                map.put("publish",1);
+                blog.setIsPublish(true);
+            }else {
+                blog.setIsPublish(false);
             }
         }
+        //是否开启评论
         if (comment!=null&&!comment.equals("")){
             if (comment.equals("on")){
-                map.put("comment",1);
+                blog.setIsComment(true);
+            }else {
+                blog.setIsComment(false);
             }
         }
-        return null;
+        Date nowTime = timeUtil.getTime();
+        blog.setGmtCreate(nowTime);
+        blog.setGmtModified(nowTime);
+        if (blogService.addBlog(blog, type, tag)) {
+            return new MyResult(true,"添加成功",200);
+        }else {
+            return new MyResult(false,"添加失败",205);
+        }
     }
 
     /**
@@ -275,6 +316,12 @@ public class AdminController {
     @RequestMapping(value = "/blog/delete", method = RequestMethod.POST)
     public MyResult deleteBlog(String id){
         return null;
+    }
+
+    public int getUserId(HttpSession httpSession){
+        //获取用户id，存在session中的
+        int userId = Integer.valueOf(aesUtil.AESDecode((String)httpSession.getAttribute("blog_session")));
+        return userId;
     }
 
 }

@@ -11,6 +11,8 @@ public class User {
 
     private String password;
 
+    private String avatar;
+
     private String email;
 
     private Integer type;
@@ -49,6 +51,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar == null ? null : avatar.trim();
     }
 
     public String getEmail() {

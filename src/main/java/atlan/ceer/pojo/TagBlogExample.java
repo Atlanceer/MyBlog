@@ -1,6 +1,7 @@
 package atlan.ceer.pojo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TagBlogExample {
@@ -164,6 +165,66 @@ public class TagBlogExample {
             return (Criteria) this;
         }
 
+        public Criteria andIdUserIsNull() {
+            addCriterion("id_user is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserIsNotNull() {
+            addCriterion("id_user is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserEqualTo(Integer value) {
+            addCriterion("id_user =", value, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserNotEqualTo(Integer value) {
+            addCriterion("id_user <>", value, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserGreaterThan(Integer value) {
+            addCriterion("id_user >", value, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserGreaterThanOrEqualTo(Integer value) {
+            addCriterion("id_user >=", value, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserLessThan(Integer value) {
+            addCriterion("id_user <", value, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserLessThanOrEqualTo(Integer value) {
+            addCriterion("id_user <=", value, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserIn(List<Integer> values) {
+            addCriterion("id_user in", values, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserNotIn(List<Integer> values) {
+            addCriterion("id_user not in", values, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserBetween(Integer value1, Integer value2) {
+            addCriterion("id_user between", value1, value2, "idUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdUserNotBetween(Integer value1, Integer value2) {
+            addCriterion("id_user not between", value1, value2, "idUser");
+            return (Criteria) this;
+        }
+
         public Criteria andNameTagIsNull() {
             addCriterion("name_tag is null");
             return (Criteria) this;
@@ -231,6 +292,126 @@ public class TagBlogExample {
 
         public Criteria andNameTagNotBetween(String value1, String value2) {
             addCriterion("name_tag not between", value1, value2, "nameTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateIsNull() {
+            addCriterion("gmt_create is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateIsNotNull() {
+            addCriterion("gmt_create is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateEqualTo(Date value) {
+            addCriterion("gmt_create =", value, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateNotEqualTo(Date value) {
+            addCriterion("gmt_create <>", value, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateGreaterThan(Date value) {
+            addCriterion("gmt_create >", value, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateGreaterThanOrEqualTo(Date value) {
+            addCriterion("gmt_create >=", value, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateLessThan(Date value) {
+            addCriterion("gmt_create <", value, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateLessThanOrEqualTo(Date value) {
+            addCriterion("gmt_create <=", value, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateIn(List<Date> values) {
+            addCriterion("gmt_create in", values, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateNotIn(List<Date> values) {
+            addCriterion("gmt_create not in", values, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateBetween(Date value1, Date value2) {
+            addCriterion("gmt_create between", value1, value2, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtCreateNotBetween(Date value1, Date value2) {
+            addCriterion("gmt_create not between", value1, value2, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedIsNull() {
+            addCriterion("gmt_modified is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedIsNotNull() {
+            addCriterion("gmt_modified is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedEqualTo(Date value) {
+            addCriterion("gmt_modified =", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedNotEqualTo(Date value) {
+            addCriterion("gmt_modified <>", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedGreaterThan(Date value) {
+            addCriterion("gmt_modified >", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedGreaterThanOrEqualTo(Date value) {
+            addCriterion("gmt_modified >=", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedLessThan(Date value) {
+            addCriterion("gmt_modified <", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedLessThanOrEqualTo(Date value) {
+            addCriterion("gmt_modified <=", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedIn(List<Date> values) {
+            addCriterion("gmt_modified in", values, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedNotIn(List<Date> values) {
+            addCriterion("gmt_modified not in", values, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedBetween(Date value1, Date value2) {
+            addCriterion("gmt_modified between", value1, value2, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedNotBetween(Date value1, Date value2) {
+            addCriterion("gmt_modified not between", value1, value2, "gmtModified");
             return (Criteria) this;
         }
     }

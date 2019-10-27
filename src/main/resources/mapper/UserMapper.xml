@@ -6,6 +6,7 @@
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, nickname, username, password, email, type, gmt_create, gmt_modified
+    id, nickname, username, password, avatar, email, type, gmt_create, gmt_modified
   </sql>
   <select id="selectByExample" parameterType="atlan.ceer.pojo.UserExample" resultMap="BaseResultMap">
     select
@@ -104,11 +105,13 @@
   </delete>
   <insert id="insert" parameterType="atlan.ceer.pojo.User">
     insert into user (id, nickname, username, 
-      password, email, type, 
-      gmt_create, gmt_modified)
+      password, avatar, email, 
+      type, gmt_create, gmt_modified
+      )
     values (#{id,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+      #{password,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="atlan.ceer.pojo.User">
     insert into user
@@ -124,6 +127,9 @@
       </if>
       <if test="password != null">
         password,
+      </if>
+      <if test="avatar != null">
+        avatar,
       </if>
       <if test="email != null">
         email,
@@ -150,6 +156,9 @@
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
@@ -186,6 +195,9 @@
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
       </if>
+      <if test="record.avatar != null">
+        avatar = #{record.avatar,jdbcType=VARCHAR},
+      </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
       </if>
@@ -209,6 +221,7 @@
       nickname = #{record.nickname,jdbcType=VARCHAR},
       username = #{record.username,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
+      avatar = #{record.avatar,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=INTEGER},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
@@ -228,6 +241,9 @@
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
       </if>
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
@@ -249,6 +265,7 @@
     set nickname = #{nickname,jdbcType=VARCHAR},
       username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},

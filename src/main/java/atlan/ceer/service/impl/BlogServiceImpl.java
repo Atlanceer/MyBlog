@@ -1,15 +1,14 @@
 package atlan.ceer.service.impl;
 
-import atlan.ceer.mapper.BlogMapper;
-import atlan.ceer.mapper.QueryMapper;
-import atlan.ceer.mapper.TagBlogMapper;
-import atlan.ceer.mapper.TypeBlogMapper;
+import atlan.ceer.mapper.*;
 import atlan.ceer.model.QueryPage;
 import atlan.ceer.pojo.*;
 import atlan.ceer.service.BlogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,10 @@ public class BlogServiceImpl implements BlogService {
     private QueryMapper queryMapper;
     @Autowired
     private BlogMapper blogMapper;
+    @Autowired
+    private TagToBlogMapper tagToBlogMapper;
+    @Autowired
+    private TypeToBlogMapper typeToBlogMapper;
 
     @Override
     public QueryPage getList(Map<String, Object> map) {
@@ -82,7 +85,21 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean addType(String typeName) {
+    public List getListForBlog(Map<String, Object> map) {
+        //判断查询的类型
+        if (((String)map.get("queryType")).equals("type")){
+            TypeBlogExample typeBlogExample = new TypeBlogExample();
+            //查询列表
+            return queryMapper.getTypeList(map);
+        }else/* if (((String)map.get("queryType")).equals("tag"))*/{
+            TagBlogExample tagBlogExample = new TagBlogExample();
+            //查询列表
+            return queryMapper.getTagList(map);
+        }
+    }
+
+    @Override
+    public boolean addType(String typeName, int userId) {
         try {
             TypeBlog typeBlog = new TypeBlog();
             typeBlog.setNameType(typeName);
@@ -122,7 +139,7 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public boolean addTag(String tagName) {
+    public boolean addTag(String tagName, int userId) {
         try {
             TagBlog tagBlog = new TagBlog();
             tagBlog.setNameTag(tagName);
@@ -158,5 +175,58 @@ public class BlogServiceImpl implements BlogService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public QueryPage getBlogList(Map map) {
+        return null;
+    }
+
+    //添加博客
+    @Transactional
+    @Override
+    public boolean addBlog(Blog blog, int type, int[] tag) {
+        try {
+            //添加进博客表
+            blogMapper.insertSelective(blog);
+            int blogId = blog.getId();
+
+            //添加进博客—分类表
+            TypeToBlog typeToBlog = new TypeToBlog();
+            typeToBlog.setIdBlog(blogId);
+            typeToBlog.setIdType(type);
+            typeToBlog.setGmtCreate(blog.getGmtCreate());
+            typeToBlog.setGmtModified(blog.getGmtModified());
+            typeToBlogMapper.insertSelective(typeToBlog);
+
+            //int temp = 1/0;
+            //添加进博客—标签表
+            for(int i=0;i<tag.length;i++){
+                TagToBlog tagToBlog = new TagToBlog();
+                tagToBlog.setIdBlog(blogId);
+                tagToBlog.setIdTag(tag[i]);
+                tagToBlog.setGmtCreate(blog.getGmtCreate());
+                tagToBlog.setGmtModified(blog.getGmtModified());
+
+                tagToBlogMapper.insertSelective(tagToBlog);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("添加博客失败:用户id："+blog.getIdUser());
+            //事务回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean changeBlog(Map map) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteBlog(Integer blogId) {
+        return false;
     }
 }

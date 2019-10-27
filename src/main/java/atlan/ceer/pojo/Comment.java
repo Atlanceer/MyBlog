@@ -7,9 +7,9 @@ public class Comment {
 
     private Integer idBlog;
 
-    private String nickname;
+    private Integer fromUser;
 
-    private String email;
+    private Integer toUser;
 
     private String content;
 
@@ -35,20 +35,20 @@ public class Comment {
         this.idBlog = idBlog;
     }
 
-    public String getNickname() {
-        return nickname;
+    public Integer getFromUser() {
+        return fromUser;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
+    public void setFromUser(Integer fromUser) {
+        this.fromUser = fromUser;
     }
 
-    public String getEmail() {
-        return email;
+    public Integer getToUser() {
+        return toUser;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setToUser(Integer toUser) {
+        this.toUser = toUser;
     }
 
     public String getContent() {

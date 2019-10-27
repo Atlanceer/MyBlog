@@ -170,7 +170,8 @@
             },1000);
           } else {
             $("#errorList li").remove();
-            $("#errorList").append("<li>出错</li>");
+            $("#errorList").append("<li>出错,请重试或者联系管理员</li>");
+            $("#negative").removeClass("hidden");
           }
         }
       });

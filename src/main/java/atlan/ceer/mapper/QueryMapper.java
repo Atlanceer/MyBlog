@@ -23,4 +23,7 @@ public interface QueryMapper {
 
     //获取用户的简易信息
     UserInfSimple getUserInfSimple(Map<String, String> map);
+
+    //添加博客
+    //void addBlog(Map map);
 }

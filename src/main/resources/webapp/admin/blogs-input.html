@@ -74,15 +74,15 @@
                 <div class="field">
                     <div id="md-content" style="z-index: 1 !important;">
                         <textarea placeholder="博客内容" name="content" style="display: none">
-                            [TOC]
+[TOC]
 
-                            #### Disabled options
+#### Disabled options
 
-                            - TeX (Based on KaTeX);
-                            - Emoji;
-                            - Task lists;
-                            - HTML tags decode;
-                            - Flowchart and Sequence Diagram;
+- TeX (Based on KaTeX);
+- Emoji;
+- Task lists;
+- HTML tags decode;
+- Flowchart and Sequence Diagram;
                         </textarea>
                     </div>
                 </div>
@@ -95,9 +95,9 @@
                                 <input type="hidden" name="type">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">分类</div>
-                                <div class="menu">
-                                    <div class="item" data-value="1">错误日志</div>
-                                    <div class="item" data-value="2">开发者手册</div>
+                                <div class="menu" id="typeList">
+                                    <!--<div class="item" data-value="1">错误日志</div>
+                                    <div class="item" data-value="2">开发者手册</div>-->
                                 </div>
                             </div>
                         </div>
@@ -109,15 +109,15 @@
                                 <input type="hidden" name="tag">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">标签</div>
-                                <div class="menu">
-                                    <div class="item" data-value="1">java</div>
+                                <div class="menu" id="tagList">
+                                    <!--<div class="item" data-value="1">java</div>
                                     <div class="item" data-value="2">JavaScript</div>
                                     <div class="item" data-value="3">python</div>
                                     <div class="item" data-value="4">学习</div>
                                     <div class="item" data-value="5">娱乐</div>
                                     <div class="item" data-value="6">记录</div>
                                     <div class="item" data-value="7">看点</div>
-                                    <div class="item" data-value="8">go</div>
+                                    <div class="item" data-value="8">go</div>-->
                                 </div>
                             </div>
                         </div>
@@ -254,16 +254,40 @@
                 $("#tagId").val(id);
             }
             $.ajax({
-                url:""
+                url:"../adminUser/type/list",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data.status){
+                        var typeList = data.content;
+                        var temp="";
+                        for(var i=0;i<typeList.length;i++){
+                            temp+="<div class='item' data-value='"+typeList[i].id+"'>"+typeList[i].nameType+"</div>"
+                        }
+                        $("#typeList").html(temp);
+                    }
+                }
+            });
+            $.ajax({
+                url:"../adminUser/tag/list",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data.status){
+                        var tagList = data.content;
+                        var temp="";
+                        for(var i=0;i<tagList.length;i++){
+                            temp+="<div class='item' data-value='"+tagList[i].id+"'>"+tagList[i].nameTag+"</div>"
+                        }
+                        $("#tagList").html(temp);
+                    }
+                }
             });
         });
 
         $("#submit").click(function () {
             var url="../adminUser/blog/add";
             var formData = $("#submitBlog").serializeArray();
-            //alert(formData);
-            //alert(formData.length)
-            //alert(formData[0].value);
             if (formData[0].value!=""){
                 url="../adminUser/blog/modify";
             }
@@ -287,7 +311,7 @@
             }
             if (formData[4].value=="") {
                 $("#errorList li").remove();
-                 $("#errorList").append("<li>请添加标签</li>");
+                $("#errorList").append("<li>请添加标签</li>");
                 $("#negative").removeClass("hidden");
                 return false;
             }
@@ -305,11 +329,12 @@
                         //延迟加载
                         setTimeout(function () {
                             $("#success").addClass("hidden");
-                            $(location).attr("href","tags.html");
-                        },1000);
+                            //$(location).attr("href","tags.html");
+                        },2000);
                     } else {
                         $("#errorList li").remove();
-                        $("#errorList").append("<li>出错</li>");
+                        $("#errorList").append("<li>出错,请重试或者联系管理员</li>");
+                        $("#negative").removeClass("hidden");
                     }
                 }
             });

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="atlan.ceer.mapper.QueryMapper">
-    <select id="getTypeList" parameterType="HashMap" resultType="atlan.ceer.pojo.TypeBlog">
-        select * from type_blog
-        limit #{beginNum},10;
-    </select>
     <select id="getTagList" parameterType="HashMap" resultType="atlan.ceer.pojo.TagBlog">
         select * from tag_blog
-        limit #{beginNum},10;
+        <if test="beginNum != null">
+            limit #{beginNum},10;
+        </if>
+    </select>
+    <select id="getTypeList" parameterType="HashMap" resultType="atlan.ceer.pojo.TypeBlog">
+        select * from type_blog
+        <if test="beginNum != null">
+            limit #{beginNum},10;
+        </if>
     </select>
     <select id="getUserInfSimple" parameterType="HashMap" resultType="atlan.ceer.model.UserInfSimple">
         select id,nickname,username,avatar
@@ -24,4 +28,8 @@
             </if>
         </where>
     </select>
+    <!--<insert id="addBlog" parameterType="HashMap" useGeneratedKeys="true">
+        insert into blog
+        <trim prefix="(" suffix=")" suffixOverrides=","
+    </insert>-->
 </mapper>

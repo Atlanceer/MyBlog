@@ -5,6 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="id_tag" jdbcType="INTEGER" property="idTag" />
     <result column="id_blog" jdbcType="INTEGER" property="idBlog" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, id_tag, id_blog
+    id, id_tag, id_blog, gmt_create, gmt_modified
   </sql>
   <select id="selectByExample" parameterType="atlan.ceer.pojo.TagToBlogExample" resultMap="BaseResultMap">
     select
@@ -98,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="atlan.ceer.pojo.TagToBlog">
-    insert into tag_to_blog (id, id_tag, id_blog
-      )
-    values (#{id,jdbcType=INTEGER}, #{idTag,jdbcType=INTEGER}, #{idBlog,jdbcType=INTEGER}
-      )
+    insert into tag_to_blog (id, id_tag, id_blog, 
+      gmt_create, gmt_modified)
+    values (#{id,jdbcType=INTEGER}, #{idTag,jdbcType=INTEGER}, #{idBlog,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="atlan.ceer.pojo.TagToBlog">
     insert into tag_to_blog
@@ -115,6 +117,12 @@
       <if test="idBlog != null">
         id_blog,
       </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -125,6 +133,12 @@
       </if>
       <if test="idBlog != null">
         #{idBlog,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -146,6 +160,12 @@
       <if test="record.idBlog != null">
         id_blog = #{record.idBlog,jdbcType=INTEGER},
       </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null">
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -155,7 +175,9 @@
     update tag_to_blog
     set id = #{record.id,jdbcType=INTEGER},
       id_tag = #{record.idTag,jdbcType=INTEGER},
-      id_blog = #{record.idBlog,jdbcType=INTEGER}
+      id_blog = #{record.idBlog,jdbcType=INTEGER},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -169,13 +191,21 @@
       <if test="idBlog != null">
         id_blog = #{idBlog,jdbcType=INTEGER},
       </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="atlan.ceer.pojo.TagToBlog">
     update tag_to_blog
     set id_tag = #{idTag,jdbcType=INTEGER},
-      id_blog = #{idBlog,jdbcType=INTEGER}
+      id_blog = #{idBlog,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
