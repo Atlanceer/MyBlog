@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="atlan.ceer.mapper.QueryMapper">
+    <select id="getBlogList" parameterType="HashMap" resultType="atlan.ceer.model.BlogInfSimple">
+        select blog.*, type_blog.name_type from blog
+        left join type_to_blog on type_to_blog.id_blog=blog.id
+        left join type_blog on type_blog.id=type_to_blog.id_type
+        <where>
+            <if test="idUser != null">
+                blog.id_user = #{idUser}
+            </if>
+            <if test="title != null">
+                and title = #{title}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="isPublish != null">
+                and is_publish = #{isPublish}
+            </if>
+        </where>
+
+        <if test="beginNum != null">
+            limit #{beginNum},10;
+        </if>
+    </select>
     <select id="getTagList" parameterType="HashMap" resultType="atlan.ceer.pojo.TagBlog">
         select * from tag_blog
         <if test="beginNum != null">
@@ -13,12 +36,19 @@
             limit #{beginNum},10;
         </if>
     </select>
+    <!--<insert id="addBlog" parameterType="HashMap" useGeneratedKeys="true">
+        insert into blog
+        <trim prefix="(" suffix=")" suffixOverrides=","
+    </insert>-->
     <select id="getUserInfSimple" parameterType="HashMap" resultType="atlan.ceer.model.UserInfSimple">
         select id,nickname,username,avatar
         from user
         <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
             <if test="username != null">
-                username = #{username}
+                and username = #{username}
             </if>
             <if test="nickname != null">
                 and nickname = #{nickname}
@@ -28,8 +58,4 @@
             </if>
         </where>
     </select>
-    <!--<insert id="addBlog" parameterType="HashMap" useGeneratedKeys="true">
-        insert into blog
-        <trim prefix="(" suffix=")" suffixOverrides=","
-    </insert>-->
 </mapper>

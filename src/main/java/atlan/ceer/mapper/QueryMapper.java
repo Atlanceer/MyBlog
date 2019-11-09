@@ -1,7 +1,7 @@
 package atlan.ceer.mapper;
 
+import atlan.ceer.model.BlogInfSimple;
 import atlan.ceer.model.UserInfSimple;
-import atlan.ceer.pojo.Blog;
 import atlan.ceer.pojo.TagBlog;
 import atlan.ceer.pojo.TypeBlog;
 
@@ -19,10 +19,10 @@ public interface QueryMapper {
     List<TagBlog> getTagList(Map map);
 
     //查询博客列表
-    List<Blog> getBlogList(Map map);
+    List<BlogInfSimple> getBlogList(Map map);
 
     //获取用户的简易信息
-    UserInfSimple getUserInfSimple(Map<String, String> map);
+    UserInfSimple getUserInfSimple(Map<String, Object> map);
 
     //添加博客
     //void addBlog(Map map);

@@ -10,6 +10,9 @@ public class TimeUtil {
     public String getTimeFormat(){
         return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(System.currentTimeMillis()));
     }
+    public String getTimeFormat(Date date){
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
+    }
     public Date getTime(){
         return new Date(System.currentTimeMillis());
     }

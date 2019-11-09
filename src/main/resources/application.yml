@@ -10,7 +10,7 @@ logging:
   file.max-history: 30
   level:
     root: info
-    atlan.ceer: info
+    atlan.ceer: debug
     atlan.ceer.mapper: debug
 
 spring:

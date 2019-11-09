@@ -9,6 +9,7 @@
 
     <script src="../static/js/jquery-3.1.1.min.js"></script>
     <script src="../static/js/semantic.min.js"></script>
+    <script src="../static/js/publicFun.js"></script>
 </head>
 <body>
     <!--导航-->
@@ -21,9 +22,9 @@
                 <a href="./tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
                 <div class="right m-item m-mobile-hide menu">
                     <div class="ui dropdown  item">
-                        <div class="text">
-                            <img class="ui avatar image" src="../static/images/head.jpg">
-                            侧耳
+                        <div class="text" id="userHead">
+                            <img id="avatarUrl" class="ui avatar image" src="../static/images/head.jpg">
+                            <!--侧耳-->
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -113,8 +114,8 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
+                <tbody id="tableList">
+                <!--<tr>
                     <td>1</td>
                     <td>刻意练习清单</td>
                     <td>认知升级</td>
@@ -124,7 +125,7 @@
                         <a href="#" class="ui mini teal basic button">编辑</a>
                         <a href="#" class="ui mini red basic button">删除</a>
                     </td>
-                </tr>
+                </tr>-->
                 </tbody>
                 <tfoot>
                 <tr>
@@ -200,32 +201,39 @@
         //加载指定页码的数据
         function loadPage(pageNum){
             $.ajax({
-                url:"../adminUser/tag/list?currentPage="+pageNum,
+                url:"../adminUser/blog/list?currentPage="+pageNum,
                 type:"GET",
                 dataType:"json",
                 success:function (data) {
                     //加载成功
                     if (data.status){
-                        var tagPage=data.content;
-                        var tagList = tagPage.pageList;
+                        var blogPage=data.content;
+                        var blogList = blogPage.pageList;
                         //页面有数据时
-                        if (tagList!="") {
+                        if (blogList!="") {
                             var toTable="";
                             //填入list
-                            for (var i=0; i<tagList.length; i++){
-                                var theNameTag="\'"+tagList[i].nameTag+"\'";
+                            for (var i=0; i<blogList.length; i++){
+                                var theNameBlog="\'"+blogList[i].title+"\'";
+                                var isPublish="是";
+                                if (blogList[i].isPublish=="0"){
+                                    isPublish="否";
+                                }
                                 toTable+= "<tr>"+
-                                    "<td>"+tagList[i].id+"</td>"+
-                                    "<td>"+tagList[i].nameTag+"</td>"+
-                                    "<td><a onclick=changeTag("+tagList[i].id+","+theNameTag+") class='ui mini teal basic button'>编辑</a>"+
-                                    "<a onclick='deleteTag("+tagList[i].id+")' class='ui mini red basic button'>删除</a></td>"+
+                                    "<td>"+blogList[i].id+"</td>"+
+                                    "<td>"+blogList[i].title+"</td>"+
+                                    "<td>"+blogList[i].nameType+"</td>"+
+                                    "<td>"+isPublish+"</td>"+
+                                    "<td>"+blogList[i].gmtModified+"</td>"+
+                                    "<td><a onclick=modifyBlog("+blogList[i].id+") class='ui mini teal basic button'>编辑</a>"+
+                                    "<a onclick='deleteBlog("+blogList[i].id+")' class='ui mini red basic button'>删除</a></td>"+
                                     "</tr>";
                             }
                             $("#tableList").html(toTable);
 
                             //生成页码
-                            var totalPage=tagPage.totalPage;
-                            var currentPage=tagPage.currentPage;
+                            var totalPage=blogPage.totalPage;
+                            var currentPage=blogPage.currentPage;
 
                             $("#currentPage").html(currentPage);
                             var pageNum="";
@@ -300,7 +308,7 @@
                                 $("#prePage").removeClass("disabled");
                             }
                             //判断当前是否为最后一页
-                            if (!tagPage.haveMore){
+                            if (!blogPage.haveMore){
                                 $("#nextPage").addClass("disabled");
                             } else {
                                 $("#nextPage").removeClass("disabled");
@@ -333,14 +341,14 @@
             });
         }
 
-        function changeTag(id,tagName) {
+        function modifyBlog(id) {
             //使用url参数方式进行页面间的传值
-            $(location).attr("href", "./tags-input.html"+"?id="+id+"&tagName="+tagName);
+            $(location).attr("href", "./blogs-input.html"+"?id="+id);
         }
-        function deleteTag(id) {
+        function deleteBlog(id) {
             if(confirm("是否删除该标签:"+id)) {
                 $.ajax({
-                    url: "../adminUser/tag/delete?id=" + id,
+                    url: "../adminUser/blog/delete?id=" + id,
                     dataType: "json",
                     type: "POST",
                     success: function (data) {

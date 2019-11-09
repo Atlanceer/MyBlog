@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -47,8 +48,9 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    //获取用户简易信息
     @Override
-    public UserInfSimple getUserInfSimple(Map<String, String> map) {
+    public UserInfSimple getUserInfSimple(Map<String, Object> map) {
         try {
             UserInfSimple userInfSimple = queryMapper.getUserInfSimple(map);
             return userInfSimple;
@@ -58,4 +60,10 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
+    /*public UserInfSimple getUserInfSimpleById(int id){
+        Map<String,Object> map = new HashMap<>();
+        map.put("id", id);
+        return queryMapper.getUserInfSimple(map);
+    }*/
 }

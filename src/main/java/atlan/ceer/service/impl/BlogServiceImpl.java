@@ -1,6 +1,7 @@
 package atlan.ceer.service.impl;
 
 import atlan.ceer.mapper.*;
+import atlan.ceer.model.BlogInfSimple;
 import atlan.ceer.model.QueryPage;
 import atlan.ceer.pojo.*;
 import atlan.ceer.service.BlogService;
@@ -53,7 +54,10 @@ public class BlogServiceImpl implements BlogService {
             //查询列表
             queryList = queryMapper.getTagList(map);
         }else {
+            queryList = queryMapper.getBlogList(map);
             BlogExample blogExample = new BlogExample();
+            BlogExample.Criteria criteria = blogExample.createCriteria();
+            criteria.andIdUserEqualTo((int)map.get("idUser"));
             totalCount = (int) blogMapper.countByExample(blogExample);
         }
 
@@ -180,6 +184,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public QueryPage getBlogList(Map map) {
         return null;
+
     }
 
     //添加博客

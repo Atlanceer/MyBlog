@@ -1,6 +1,7 @@
 package atlan.ceer.controller;
 
 
+import atlan.ceer.model.BlogInfSimple;
 import atlan.ceer.model.MyResult;
 import atlan.ceer.model.QueryPage;
 import atlan.ceer.model.UserInfSimple;
@@ -50,20 +51,20 @@ public class AdminController {
         //log.info(username+"============"+password);
         if (userService.login(username,password)) {
             //查询用户简易信息
-            Map<String, String> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             map.put("username",username);
             UserInfSimple userInfSimple = userService.getUserInfSimple(map);
             log.info(userInfSimple.toString());
 
             HttpSession httpSession = request.getSession();
             //设置session
-            httpSession.setAttribute("blog_session", aesUtil.AESEncode(userInfSimple.getId()));
+            httpSession.setAttribute("blog_session", aesUtil.AESEncode(userInfSimple.getId().toString()));
 
             //添加cookie记录用户信息，设置中文转码
             Cookie blogCookie = null;
             try {
                 //blogCookie = new Cookie("blog_cookie", URLEncoder.encode(username,"UTF-8"));
-                blogCookie = new Cookie("blog_cookie", aesUtil.AESEncode(userInfSimple.getId()));
+                blogCookie = new Cookie("blog_cookie", aesUtil.AESEncode(userInfSimple.getId().toString()));
                 //log.info(blogCookie.getName()+"-->>>>>"+blogCookie.getValue());
                 //设置过期时间（秒为单位）一天：60*60*24
                 blogCookie.setMaxAge(60*60*24);
@@ -294,8 +295,29 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/blog/list", method = RequestMethod.GET)
-    public MyResult getBlogList(String currentPage, String type, String tag, int ifRecommend){
-        return  null;
+    public MyResult getBlogList(String title, String type ,String isPublish,String currentPage, HttpSession session){
+        int userId = getUserId(session);
+        Map<String, Object> map = new HashMap<>();
+        map.put("idUser",userId);
+        if (title!=null){
+            map.put("title",title);
+        }
+        if (title!=null){
+            map.put("type",Integer.valueOf(type));
+        }
+        if (isPublish!=null){
+            if (isPublish.equals("on")){
+                map.put("isPublish",1);
+            }
+        }else {
+            map.put("isPublish",0);
+        }
+        if (currentPage!=null){
+            map.put("currentPage",currentPage);
+        }
+        map.put("queryType","blog");
+        QueryPage<BlogInfSimple> queryPage = blogService.getList(map);
+        return new MyResult(queryPage,true,"查询成功",200);
     }
 
     /**
@@ -318,10 +340,29 @@ public class AdminController {
         return null;
     }
 
+    /**
+     * 获取用户简易信息
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping(value = "/userInf", method = RequestMethod.GET)
+    public MyResult getUserInf(HttpSession httpSession){
+        UserInfSimple userInfSimple = getUserInfSimple(getUserId(httpSession));
+        return new MyResult(userInfSimple,true,"查询成功",200);
+    }
+
+    //通过session获取用户id
     public int getUserId(HttpSession httpSession){
         //获取用户id，存在session中的
         int userId = Integer.valueOf(aesUtil.AESDecode((String)httpSession.getAttribute("blog_session")));
         return userId;
+    }
+
+    //通过用户id获取简易信息
+    public UserInfSimple getUserInfSimple(int id){
+        Map<String, Object> map = new HashMap<>();
+        map.put("id",id);
+        return userService.getUserInfSimple(map);
     }
 
 }
