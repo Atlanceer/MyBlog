@@ -26,4 +26,7 @@ public interface QueryMapper {
 
     //添加博客
     //void addBlog(Map map);
+    List<Map> getBlogTag(Map<String, Integer> map);
+
+    Map getBlogType(Map<String, Integer> map);
 }

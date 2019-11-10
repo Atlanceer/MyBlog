@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="atlan.ceer.mapper.QueryMapper">
     <select id="getBlogList" parameterType="HashMap" resultType="atlan.ceer.model.BlogInfSimple">
-        select blog.*, type_blog.name_type from blog
+        select blog.*, type_to_blog.id_type, type_blog.name_type from blog
         left join type_to_blog on type_to_blog.id_blog=blog.id
         left join type_blog on type_blog.id=type_to_blog.id_type
         <where>
@@ -13,7 +13,7 @@
                 and title = #{title}
             </if>
             <if test="type != null">
-                and type = #{type}
+                and id_type = #{type}
             </if>
             <if test="isPublish != null">
                 and is_publish = #{isPublish}
@@ -57,5 +57,17 @@
                 and email = #{email}
             </if>
         </where>
+    </select>
+    <select id="getBlogType" parameterType="HashMap" resultType="HashMap">
+        select type_blog.name_type, type_blog.id from blog
+        left join type_to_blog on type_to_blog.id_blog=blog.id
+        left join type_blog on type_to_blog.id_type=type_blog.id
+        where blog.id_user=#{idUser} and type_to_blog.id_blog=#{idBlog}
+    </select>
+    <select id="getBlogTag" parameterType="HashMap" resultType="HashMap">
+        select tag_blog.name_tag, tag_blog.id from blog
+        left join tag_to_blog on tag_to_blog.id_blog=blog.id
+        left join tag_blog on tag_to_blog.id_tag=tag_blog.id
+        where blog.id_user=#{idUser} and tag_to_blog.id_blog=#{idBlog}
     </select>
 </mapper>

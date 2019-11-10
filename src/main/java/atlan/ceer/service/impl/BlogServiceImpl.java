@@ -1,6 +1,7 @@
 package atlan.ceer.service.impl;
 
 import atlan.ceer.mapper.*;
+import atlan.ceer.model.BlogInfForModify;
 import atlan.ceer.model.BlogInfSimple;
 import atlan.ceer.model.QueryPage;
 import atlan.ceer.pojo.*;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -212,9 +215,9 @@ public class BlogServiceImpl implements BlogService {
                 tagToBlog.setIdTag(tag[i]);
                 tagToBlog.setGmtCreate(blog.getGmtCreate());
                 tagToBlog.setGmtModified(blog.getGmtModified());
-
                 tagToBlogMapper.insertSelective(tagToBlog);
             }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             log.error("添加博客失败:用户id："+blog.getIdUser());
@@ -222,16 +225,105 @@ public class BlogServiceImpl implements BlogService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return false;
         }
-        return true;
     }
 
     @Override
-    public boolean changeBlog(Map map) {
-        return false;
+    public boolean modifyBlog(Blog blog, int type, int[] tag) {
+        try {
+            int blogId = blog.getId();
+            //添加进博客表
+            BlogExample blogExample = new BlogExample();
+            BlogExample.Criteria criteriaBlog = blogExample.createCriteria();
+            criteriaBlog.andIdEqualTo(blogId);
+            blogMapper.updateByExampleSelective(blog,blogExample);
+
+            //清除之前的分类表
+            TypeToBlogExample typeToBlogExample = new TypeToBlogExample();
+            TypeToBlogExample.Criteria criteriaTypeToBlog = typeToBlogExample.createCriteria();
+            criteriaTypeToBlog.andIdBlogEqualTo(blogId);
+            typeToBlogMapper.deleteByExample(typeToBlogExample);
+            //添加进博客—分类表
+            TypeToBlog typeToBlog = new TypeToBlog();
+            typeToBlog.setIdBlog(blogId);
+            typeToBlog.setIdType(type);
+            typeToBlog.setGmtCreate(blog.getGmtCreate());
+            typeToBlog.setGmtModified(blog.getGmtModified());
+            typeToBlogMapper.insertSelective(typeToBlog);
+
+            ////清除之前的标签表
+            TagToBlogExample tagToBlogExample = new TagToBlogExample();
+            TagToBlogExample.Criteria criteriaTagToBlog = tagToBlogExample.createCriteria();
+            criteriaTagToBlog.andIdBlogEqualTo(blogId);
+            tagToBlogMapper.deleteByExample(tagToBlogExample);
+            //添加进博客—标签表
+            for(int i=0;i<tag.length;i++){
+                TagToBlog tagToBlog = new TagToBlog();
+                tagToBlog.setIdBlog(blog.getId());
+                tagToBlog.setIdTag(tag[i]);
+                tagToBlog.setGmtCreate(blog.getGmtCreate());
+                tagToBlog.setGmtModified(blog.getGmtModified());
+                tagToBlogMapper.insertSelective(tagToBlog);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("修改博客失败:用户id："+blog.getIdUser());
+            //事务回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
     }
 
     @Override
     public boolean deleteBlog(Integer blogId) {
         return false;
+    }
+
+    @Override
+    public BlogInfForModify getBlogInfForModify(int idUser, int idBlog) {
+        try {
+            BlogExample blogExample = new BlogExample();
+            BlogExample.Criteria criteria = blogExample.createCriteria();
+            criteria.andIdUserEqualTo(idUser);
+            criteria.andIdEqualTo(idBlog);
+            //抽取blog表中的数据
+            List<Blog> blogList = blogMapper.selectByExample(blogExample);
+            Blog blog = blogList.get(0);
+            BlogInfForModify blogInfForModify = new BlogInfForModify();
+            blogInfForModify.setComment(blog.getIsComment());
+            blogInfForModify.setContent(blog.getContent());
+            blogInfForModify.setFirstPicture(blog.getFirstPicture());
+            blogInfForModify.setFlag(blog.getFlag());
+            blogInfForModify.setGmtCreate(blog.getGmtCreate());
+            blogInfForModify.setGmtModified(blog.getGmtModified());
+            blogInfForModify.setId(blog.getId());
+            blogInfForModify.setPublish(blog.getIsPublish());
+            blogInfForModify.setShare(blog.getIsShare());
+            blogInfForModify.setTitle(blog.getTitle());
+
+            Map<String, Integer> map = new HashMap<>();
+            map.put("idBlog", idBlog);
+            map.put("idUser", idUser);
+            //抽取blog_type表中的数据
+            Map typeInf = queryMapper.getBlogType(map);
+            blogInfForModify.setType((int)typeInf.get("id"));
+            blogInfForModify.setTypeName((String)typeInf.get("name_type"));
+
+            //抽取blog_type表中的数据
+            List<Map> tagInfList = queryMapper.getBlogTag(map);
+            List<String> tagName = new ArrayList<>();
+            List<Integer> tagId = new ArrayList<>();
+            for (int i=0;i<tagInfList.size();i++){
+                tagName.add((String) tagInfList.get(i).get("name_tag"));
+                tagId.add((Integer) tagInfList.get(i).get("id"));
+            }
+            blogInfForModify.setTags(tagId);
+            blogInfForModify.setTagsName(tagName);
+            return blogInfForModify;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

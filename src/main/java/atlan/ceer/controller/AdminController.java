@@ -1,10 +1,7 @@
 package atlan.ceer.controller;
 
 
-import atlan.ceer.model.BlogInfSimple;
-import atlan.ceer.model.MyResult;
-import atlan.ceer.model.QueryPage;
-import atlan.ceer.model.UserInfSimple;
+import atlan.ceer.model.*;
 import atlan.ceer.pojo.Blog;
 import atlan.ceer.service.BlogService;
 import atlan.ceer.service.UserService;
@@ -247,10 +244,10 @@ public class AdminController {
      * @return
      */
     @RequestMapping(value = "/blog/add", method = RequestMethod.POST)
-    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture, String publish, String comment, HttpSession httpSession){
+    public MyResult addBlog(String title, String content, int type, int[] tag, String indexPicture, String publish, String comment, String modify, int blogId, HttpSession httpSession){
         //获取用户id，存在session中的
         int userId = getUserId(httpSession);
-        log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture+"==="+publish+"==="+comment+"==="+userId);
+        //log.info(title+"==="+content+"==="+type+"==="+ Arrays.toString(tag) +"==="+indexPicture+"==="+publish+"==="+comment+"==="+userId);
 
         Blog blog = new Blog();
         blog.setIdUser(userId);
@@ -264,12 +261,15 @@ public class AdminController {
             blog.setFirstPicture(indexPicture);
         }
         //是否公开
+        log.info("publish=========="+publish);
         if (publish!=null&&!publish.equals("")){
             if (publish.equals("on")){
                 blog.setIsPublish(true);
             }else {
                 blog.setIsPublish(false);
             }
+        }else {
+            blog.setIsPublish(false);
         }
         //是否开启评论
         if (comment!=null&&!comment.equals("")){
@@ -278,11 +278,20 @@ public class AdminController {
             }else {
                 blog.setIsComment(false);
             }
+        }else {
+            blog.setIsComment(false);
         }
         Date nowTime = timeUtil.getTime();
         blog.setGmtCreate(nowTime);
         blog.setGmtModified(nowTime);
-        if (blogService.addBlog(blog, type, tag)) {
+        boolean judge=true;
+        if (modify!=null&&modify.equals("yes")){
+            blog.setId(blogId);
+            judge = blogService.modifyBlog(blog, type, tag);
+        }else {
+            judge = blogService.addBlog(blog, type, tag);
+        }
+        if (judge) {
             return new MyResult(true,"添加成功",200);
         }else {
             return new MyResult(false,"添加失败",205);
@@ -299,13 +308,13 @@ public class AdminController {
         int userId = getUserId(session);
         Map<String, Object> map = new HashMap<>();
         map.put("idUser",userId);
-        if (title!=null){
+        if (!(title==null||title.equals(""))){
             map.put("title",title);
         }
-        if (title!=null){
+        if (!(type==null||type.equals(""))){
             map.put("type",Integer.valueOf(type));
         }
-        if (isPublish!=null){
+        if (!(isPublish==null||isPublish.equals(""))){
             if (isPublish.equals("on")){
                 map.put("isPublish",1);
             }
@@ -330,13 +339,26 @@ public class AdminController {
         return null;
     }
 
+    @RequestMapping(value = "/blog/inf", method = RequestMethod.GET)
+    public MyResult getBlogInfForModify(int id, HttpSession httpSession){
+        int idUser = getUserId(httpSession);
+        BlogInfForModify blogInfForModify = blogService.getBlogInfForModify(idUser, id);
+        if (blogInfForModify==null){
+            return new MyResult(false,"查询失败",205);
+        }else {
+            return new MyResult(blogInfForModify,true,"查询成功",200);
+        }
+    }
+
     /**
      * 博客删除
      * @param id
      * @return
      */
     @RequestMapping(value = "/blog/delete", method = RequestMethod.POST)
-    public MyResult deleteBlog(String id){
+    public MyResult deleteBlog(String id, HttpSession httpSession){
+        int idUser = getUserId(httpSession);
+
         return null;
     }
 

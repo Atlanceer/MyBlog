@@ -75,18 +75,18 @@
                     </div>
                     <div class="field">
                         <div class="ui selection dropdown">
-                            <!--<input type="hidden" name="type">-->
+                            <input type="hidden" name="type">
                             <i class="dropdown icon"></i>
                             <div class="default text">分类</div>
-                            <div class="menu">
-                                <div class="item" data-value="1">错误日志</div>
-                                <div class="item" data-value="2">开发者手册</div>
+                            <div class="menu" id="typeList">
+                                <!--<div class="item" data-value="1">错误日志</div>
+                                <div class="item" data-value="2">开发者手册</div>-->
                             </div>
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" id="ifPublish" name="ifPublish">
+                            <input type="checkbox" id="ifPublish" checked name="isPublish">
                             <label for="ifPublish">发布的</label>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         </div>
                     </div>-->
                     <div class="field">
-                        <button class="ui mini teal basic button" id="search"><i class="search icon"></i>搜索</button>
+                        <button type="button" class="ui mini teal basic button" id="search"><i class="search icon"></i>搜索</button>
                     </div>
                 </div>
             </form>
@@ -195,14 +195,34 @@
         $(document).ready(function () {
             var currentPage=$("#currentPage").html();
             loadPage(currentPage);
-
+            $.ajax({
+                url:"../adminUser/type/list",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data.status){
+                        var typeList = data.content;
+                        var temp="";
+                        for(var i=0;i<typeList.length;i++){
+                            temp+="<div class='item' data-value='"+typeList[i].id+"'>"+typeList[i].nameType+"</div>"
+                        }
+                        $("#typeList").html(temp);
+                    }
+                }
+            });
         });
 
+        $("#search").click(function () {
+            loadPage(1);
+        });
         //加载指定页码的数据
         function loadPage(pageNum){
+            var searchData=$("#searchForm").serializeArray();
+
             $.ajax({
                 url:"../adminUser/blog/list?currentPage="+pageNum,
                 type:"GET",
+                data:searchData,
                 dataType:"json",
                 success:function (data) {
                     //加载成功
@@ -216,8 +236,10 @@
                             for (var i=0; i<blogList.length; i++){
                                 var theNameBlog="\'"+blogList[i].title+"\'";
                                 var isPublish="是";
-                                if (blogList[i].isPublish=="0"){
+                                if (!blogList[i].publish){
                                     isPublish="否";
+                                }else {
+                                    isPublish="是";
                                 }
                                 toTable+= "<tr>"+
                                     "<td>"+blogList[i].id+"</td>"+
@@ -346,7 +368,7 @@
             $(location).attr("href", "./blogs-input.html"+"?id="+id);
         }
         function deleteBlog(id) {
-            if(confirm("是否删除该标签:"+id)) {
+            if(confirm("是否删除该条微博:"+id)) {
                 $.ajax({
                     url: "../adminUser/blog/delete?id=" + id,
                     dataType: "json",

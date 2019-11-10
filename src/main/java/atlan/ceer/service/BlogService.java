@@ -1,5 +1,6 @@
 package atlan.ceer.service;
 
+import atlan.ceer.model.BlogInfForModify;
 import atlan.ceer.model.QueryPage;
 import atlan.ceer.pojo.Blog;
 import atlan.ceer.pojo.TagBlog;
@@ -38,9 +39,11 @@ public interface BlogService {
     //添加博客
     boolean addBlog(Blog blog, int type, int[] tag);
     //修改博客
-    boolean changeBlog(Map map);
+    boolean modifyBlog(Blog blog, int type, int[] tag);
     //删除博客
     boolean deleteBlog(Integer blogId);
+
+    BlogInfForModify getBlogInfForModify(int idUser, int idBlog);
 
 
 
